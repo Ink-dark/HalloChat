@@ -212,7 +212,7 @@ const handleServerSelect = (selected) => {
 
 // 更新端口验证逻辑
 const portNum = parseInt(serverPort, 10);
-{foundServers.map(server => (
+{foundServers.map(yyserver => (
   <ServerItem 
     key={server.id} 
     onClick={() => handleServerSelect(server)}
