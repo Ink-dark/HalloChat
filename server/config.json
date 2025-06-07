@@ -1,0 +1,36 @@
+{
+  "port": 7932,
+  "maxConnections": 1000,
+  "forceLogoutEnabled": true,
+  "logLevel": "info",
+  "ssl": {
+    "enabled": false,
+    "certPath": "./ssl/cert.pem",
+    "keyPath": "./ssl/key.pem"
+  },
+  "database": {
+    "uri": "mongodb://localhost/hallochat",
+    "options": {
+      "useNewUrlParser": true,
+      "useUnifiedTopology": true
+    }
+  },
+  "mdns": {
+    "enabled": true,
+    "serviceName": "hallo-chat",
+    "displayName": "Hallo Chat Server",
+    "serviceType": "tcp"
+  },
+  "logging": {
+    "level": "info",
+    "file": "logs/server.log"
+  },
+  "security": {
+    "jwtSecret": "your-secret-key",
+    "tokenExpiration": "24h"
+  },
+  "rateLimiting": {
+    "windowMs": 60000,
+    "max": 100
+  }
+}

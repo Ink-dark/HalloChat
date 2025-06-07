@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>服务端管理工具</title>
+</head>
+<body>
+  <div style="padding: 20px;">
+    <h2>服务控制</h2>
+    <button id="startBtn">启动服务</button>
+    <button id="stopBtn">停止服务</button>
+    <div id="status" style="margin-top: 10px;">服务状态：未启动</div>
+
+    <h2>配置设置</h2>
+    <label>端口：<input type="number" id="port" placeholder="3000"></label><br>
+    <label>最大连接数：<input type="number" id="maxConnections" placeholder="1000"></label><br>
+    <label>强制下线启用：<input type="checkbox" id="forceLogoutEnabled"></label><br>
+    <button id="saveConfig">保存配置</button>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>

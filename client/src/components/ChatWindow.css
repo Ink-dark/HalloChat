@@ -1,0 +1,103 @@
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.messages-container {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+.message {
+  max-width: 70%;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 18px;
+  position: relative;
+}
+
+.message.sent {
+  align-self: flex-end;
+  background-color: #0084ff;
+  color: white;
+}
+
+.message.received {
+  align-self: flex-start;
+  background-color: #e4e6eb;
+  color: #050505;
+}
+
+.message-time {
+  font-size: 0.8em;
+  opacity: 0.7;
+  display: block;
+  margin-top: 4px;
+}
+
+.message-input {
+  display: flex;
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ddd;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 18px;
+  outline: none;
+}
+
+.message-input button {
+  margin-left: 8px;
+  padding: 8px 16px;
+  background-color: #0084ff;
+  color: white;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+/* 加密聊天特殊样式 */
+.chat-window.encrypted .chat-header {
+  background-color: #e3f2fd;
+}
+
+/* 群组聊天特殊样式 */
+.chat-window.group .chat-header {
+  background-color: #f1f8e9;
+}
+
+/* 频道聊天特殊样式 */
+.chat-window.channel .chat-header {
+  background-color: #fce4ec;
+}
+
+.typing-indicator {
+  font-size: 0.8em;
+  color: #666;
+  margin-left: 8px;
+  font-style: italic;
+}
+
+.security-indicator {
+  font-size: 0.8em;
+  color: #4caf50;
+}
