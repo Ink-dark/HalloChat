@@ -1,20 +1,33 @@
-const mongoose = require('mongoose');
+const { Model } = require('sequelize');
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = process.env.BCRYPT_SALT || 10;
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  avatar: { type: String },
-  onlineStatus: { type: Boolean, default: false },
-  lastSeen: { type: Date, default: Date.now },
-  contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
-  channels: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Channel' }],
-  encryptionKey: { type: String }, // 用于端到端加密
-  status: { type: String, enum: ['active', 'suspended', 'banned'], default: 'active' },
-  registrationIp: { type: String },
-  failedLoginAttempts: { type: Number, default: 0 },
-  lastFailedLogin: { type: Date },
-  isVerified: { type: Boolean, default: false }
-});
+module.exports = (sequelize, DataTypes) => {
+  class User extends Model {
+    static associate(models) {
+      // 关联关系
+    }
 
-module.exports = mongoose.model('User', userSchema);
+    validPassword(password) {
+      return bcrypt.compareSync(password, this.password);
+    }
+  }
+
+  User.init({
+    username: {
+      type: DataTypes.STRING,
+      unique: true
+    },
+    password: {
+      type: DataTypes.STRING(64),
+      set(value) {
+        this.setDataValue('password', bcrypt.hashSync(value, SALT_ROUNDS));
+      }
+    }
+  }, {
+    sequelize,
+    modelName: 'User',
+  });
+
+  return User;
+};

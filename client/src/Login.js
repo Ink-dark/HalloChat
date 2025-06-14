@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -13,21 +14,17 @@ const Login = () => {
   };
 
   // 密码校验：8-16位，包含字母、数字、特殊字符
-  const validatePassword = (value) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
-    return regex.test(value) ? '' : '密码需8-20位（包含字母/数字/特殊字符）';
-  };
+  const validatePassword = debounce((value) => {
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/.test(value)) {
+      setErrors({ ...errors, password: '需包含字母和数字且≥8位' });
+    } else {
+      setErrors({ ...errors, password: '' });
+    }
+  }, 300);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // 实时校验
-    if (name === 'username') setErrors(prev => ({ ...prev, username: validateUsername(value) }));
-    if (name === 'password') setErrors(prev => ({ ...prev, password: validatePassword(value) }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     // 最终校验
     const newErrors = {
       username: validateUsername(formData.username),
@@ -68,10 +65,27 @@ const Login = () => {
           />
           {errors.password && <span className="error">{errors.password}</span>}
         </div>
-        <button type="submit">登录</button>
+        <button type="submit" disabled={isSubmitting} className={isSubmitting ? 'loading' : ''}>
+          {isSubmitting ? ( 
+            <>
+              <span className="spinner"></span>
+              登录中...
+            </>
+          ) : '登录'}
+        </button>
       </form>
     </div>
   );
 };
 
 export default Login;
+
+try {
+  const response = await axios.post('/api/login', formData);
+  console.log('登录成功:', response.data);
+} catch (error) {
+  console.error('登录失败:', error.response?.data || error.message);
+} finally {
+  setIsSubmitting(false);
+}
+;

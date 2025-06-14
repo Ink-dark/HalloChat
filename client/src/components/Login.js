@@ -214,10 +214,10 @@ const handleServerSelect = (selected) => {
 const portNum = parseInt(serverPort, 10);
 {foundServers.map(yyserver => (
   <ServerItem 
-    key={server.id} 
+    key={yyserver.id} 
     onClick={() => handleServerSelect(server)}
   >
-    {server.name}
+    {yyserver.name}
   </ServerItem>
 ))}
 

@@ -16,3 +16,14 @@ log.transports.file.archiveLog = (logPath) => {
     uploadLogToServer(logPath);
   }
 };
+
+const win = new BrowserWindow({
+  width: 1200,
+  height: 800,
+  webPreferences: {
+    nodeIntegration: true,
+    contextIsolation: false,
+    enableRemoteModule: true
+  },
+  icon: path.join(__dirname, 'public/favicon.ico')
+})
