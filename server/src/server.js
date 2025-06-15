@@ -3,7 +3,7 @@ const http = require('http');
 const mongoose = require('mongoose');
 const WebSocketService = require('./services/websocket');
 const apiRoutes = require('./routes/api');
-const mdns = require('mdns');
+const mdns = require('mdns-js');
 const config = require('../config.json');
 
 const app = express();
