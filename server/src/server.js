@@ -37,3 +37,25 @@ if (config.mdns.enabled) {
 }
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// 优雅关闭服务器
+const shutdown = () => {
+  console.log('Shutting down server...');
+  server.close(() => {
+    console.log('HTTP server closed');
+    mongoose.disconnect().then(() => {
+      console.log('MongoDB disconnected');
+      process.exit(0);
+    });
+  });
+};
+
+// 添加stop命令API端点
+app.post('/api/stop', (req, res) => {
+  res.status(200).send('Server is shutting down...');
+  shutdown();
+});
+
+// 监听终止信号
+process.on('SIGINT', shutdown);  // Ctrl+C
+process.on('SIGTERM', shutdown); // 系统终止信号
