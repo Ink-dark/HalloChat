@@ -1,1 +1,7 @@
+# 忽略敏感文件和环境目录
+.env
+.env.*
+.env.local
 node_modules/
+.idea/
+.vscode/
