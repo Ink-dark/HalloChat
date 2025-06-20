@@ -11,6 +11,11 @@ const ContactList = ({
   onCreateChannel,
   settings 
 }) => {
+  const handleSettingChange = (contactId, settings) => {
+    // 处理联系人设置变更的逻辑
+    console.log('Contact settings changed:', contactId, settings);
+  };
+
   const [localContacts, setLocalContacts] = useState([
     { id: 'user2', username: '好友1', onlineStatus: true, isStarred: false, isPinned: false },
     { id: 'user3', username: '好友2', onlineStatus: false, isStarred: true, isPinned: false },

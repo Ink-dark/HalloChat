@@ -1,29 +1,38 @@
-const log = require('electron-log');
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
-// 配置日志路径（Windows默认：%USERPROFILE%/AppData/Roaming/HalloChat/logs）
-log.transports.file.resolvePath = () => {
-  return path.join(app.getPath('userData'), 'logs', 'hallochat-%DATE%.log');
-};
-
-// 配置格式（时间戳+级别+内容）
-log.transports.file.format = '[{h}:{i}:{s}.{ms}] [{level}] {text}';
-
-// 设置单文件最大5MB，保留7天日志
-log.transports.file.maxSize = 5 * 1024 * 1024;
-log.transports.file.archiveLog = (logPath) => {
-  // 可选：自动上传日志到服务端（需用户授权）
-  if (userAgreedToUpload) {
-    uploadLogToServer(logPath);
-  }
-};
-
-const win = new BrowserWindow({
-  width: 1200,
+// 创建窗口函数
+function createWindow() {
+  // 创建浏览器窗口
+  const mainWindow = new BrowserWindow({
+    width: 1200,
   height: 800,
   webPreferences: {
     nodeIntegration: true,
     contextIsolation: false,
     enableRemoteModule: true
-  },
-  icon: path.join(__dirname, 'public/favicon.ico')
-})
+    },
+    icon: path.join(__dirname, 'public/favicon.ico')
+  });
+
+  // 加载React开发服务器
+  mainWindow.loadURL('http://localhost:3000');
+
+  // 打开开发者工具
+  mainWindow.webContents.openDevTools();
+}
+
+// 应用就绪后创建窗口
+app.whenReady().then(() => {
+  createWindow();
+
+  app.on('activate', function () {
+    // 在macOS上，当点击dock图标且没有其他窗口打开时，通常会重新创建一个窗口
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
+
+// 当所有窗口关闭时退出应用（macOS除外）
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit();
+});

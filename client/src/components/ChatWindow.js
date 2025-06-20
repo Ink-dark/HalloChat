@@ -3,12 +3,13 @@ import Message from '../models/message';
 import chatService from '../services/chatService';
 import './ChatWindow.css';
 
-const ChatWindow = ({ currentUser, contact }) => {
-  const [messages, setMessages] = useState([]);
+function ChatWindow({ currentUser, contact }) {
+    const [editContent, setEditContent] = useState('');
+    const [editingMessageId, setEditingMessageId] = useState(null);
+    const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [editingMessageId, setEditingMessageId] = useState(null);
-  const [editContent, setEditContent] = useState('');
+
   const [error, setError] = useState(null);
 
   const messageMenuRef = useRef(null);
@@ -17,18 +18,18 @@ const ChatWindow = ({ currentUser, contact }) => {
     setEditingMessageId(messageId);
     setEditContent(content);
   };
-  
+
   const showMessageMenu = (e, message) => {
     const menu = messageMenuRef.current;
     if (menu) {
       menu.style.display = 'block';
       menu.style.left = `${e.clientX}px`;
       menu.style.top = `${e.clientY}px`;
-      
+
       // 设置当前选中的消息
       menu.setAttribute('data-message-id', message.id);
       menu.setAttribute('data-message-content', message.content);
-      
+
       // 点击其他地方关闭菜单
       const closeMenu = () => {
         menu.style.display = 'none';
@@ -37,49 +38,47 @@ const ChatWindow = ({ currentUser, contact }) => {
       document.addEventListener('click', closeMenu);
     }
   };
-  
+
   useEffect(() => {
     // 初始化聊天服务
     chatService.connect(currentUser);
-    
+
     // 添加消息处理器
     chatService.addMessageHandler((message) => {
       if (message.senderId === contact.id || message.receiverId === contact.id) {
         setMessages(prev => [...prev, message]);
-        
+
         // 自动标记接收到的消息为已读
         if (message.senderId === contact.id) {
           chatService.markAsRead(message.id);
         }
       }
     });
-    
+
     // 添加已读状态处理器
     chatService.addReadHandler((messageId, deviceId) => {
-      setMessages(prev => prev.map(msg => 
-        msg.id === messageId ? { 
-          ...msg, 
-          isRead: true,
-          deviceId,
-          syncStatus: 'synced'
-        } : msg
+      setMessages(prev => prev.map(msg => msg.id === messageId ? {
+        ...msg,
+        isRead: true,
+        deviceId,
+        syncStatus: 'synced'
+      } : msg
       ));
     });
-    
+
     // 添加同步状态处理器
     chatService.addSyncHandler((messageId, status) => {
-      setMessages(prev => prev.map(msg => 
-        msg.id === messageId ? { ...msg, syncStatus: status } : msg
+      setMessages(prev => prev.map(msg => msg.id === messageId ? { ...msg, syncStatus: status } : msg
       ));
     });
-    
+
     // 添加输入状态处理器
     chatService.addTypingHandler((userId, typingStatus) => {
       if (userId === contact.id) {
         setIsTyping(typingStatus);
       }
     });
-    
+
     return () => {
       chatService.disconnect();
     };
@@ -90,7 +89,7 @@ const ChatWindow = ({ currentUser, contact }) => {
       setError('发送内容不能为空');
       return;
     }
-    
+
     const message = chatService.sendMessage(contact.id, newMessage);
     setMessages(prev => [...prev, message]);
     setNewMessage('');
@@ -117,7 +116,7 @@ const ChatWindow = ({ currentUser, contact }) => {
           编辑消息
         </button>
       </div>
-      
+
       <div className="chat-header">
         <h3>{contact.username}</h3>
         <div className="status-indicator">
@@ -125,18 +124,18 @@ const ChatWindow = ({ currentUser, contact }) => {
           {isTyping && <span className="typing-indicator">正在输入...</span>}
         </div>
       </div>
-      
+
       <div className="messages-container">
         {messages.map((message, index) => (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className={`message ${message.senderId === currentUser.id ? 'sent' : 'received'}`}
             onContextMenu={(e) => {
               e.preventDefault();
               if (message.senderId === currentUser.id) {
                 showMessageMenu(e, message);
               }
-            }}
+            } }
           >
             {editingMessageId === message.id ? (
               <>
@@ -144,8 +143,7 @@ const ChatWindow = ({ currentUser, contact }) => {
                   type="text"
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleEditSubmit(message.id)}
-                />
+                  onKeyDown={(e) => e.key === 'Enter' && handleEditSubmit(message.id)} />
                 <button onClick={() => handleEditSubmit(message.id)}>保存</button>
                 <button onClick={() => setEditingMessageId(null)}>取消</button>
               </>
@@ -155,7 +153,7 @@ const ChatWindow = ({ currentUser, contact }) => {
                   <>
                     [消息已撤回]
                     {message.canBeEdited && (
-                      <button 
+                      <button
                         className="edit-recalled-btn"
                         onClick={() => handleEditMessage(message.id, message.originalContent)}
                       >
@@ -177,26 +175,19 @@ const ChatWindow = ({ currentUser, contact }) => {
           </div>
         ))}
       </div>
-      
+
       <div className="message-input">
         <input
           type="text"
           value={newMessage}
           onChange={handleTyping}
           placeholder="输入消息..."
-          onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-        />
+          onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()} />
         <button onClick={handleSendMessage}>发送</button>
       </div>
     </div>
   );
-};
-
-
-
-
-
-  const [error, setError] = useState(null);
+}
 
   const handleRecallMessage = async (messageId) => {
     try {

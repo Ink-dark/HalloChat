@@ -1,28 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import MainWindow from './components/MainWindow';
 import './App.css';
-import { Modal, Button } from 'antd';
+import { Modal, Button, Form, Input, message } from 'antd';
 
 function App() {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
-  
-  // 模拟当前登录用户
-  const currentUser = {
-    id: 'user1',
-    username: '当前用户',
-    onlineStatus: true
-  };
-
   const [hasAgreed, setHasAgreed] = useState(false);
-  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loginModalVisible, setLoginModalVisible] = useState(false);
+
   const handleDisclaimerClose = () => {
     if (hasAgreed) {
       setShowDisclaimer(false);
+      setLoginModalVisible(true); // 显示登录窗口
+    }
+  };
+
+  const handleLogin = async (values) => {
+    // 简单模拟登录验证
+    if (values.username && values.password) {
+      message.success('登录成功！');
+      setCurrentUser({
+        id: 'user1',
+        username: values.username,
+        onlineStatus: true
+      });
+      setIsAuthenticated(true);
+      setLoginModalVisible(false);
+    } else {
+      message.error('请输入用户名和密码');
     }
   };
 
   return (
     <div className="App">
+      {/* 法律声明弹窗 */}
       <Modal
         title="法律声明"
         visible={showDisclaimer}
@@ -49,7 +62,44 @@ function App() {
         <p>3. 本软件不收集、存储或传输用户隐私数据。</p>
         <p>4. 使用本软件即表示您同意以上条款。</p>
       </Modal>
-      <MainWindow currentUser={currentUser} />
+
+      {/* 登录弹窗 */}
+      <Modal
+        title="用户登录"
+        visible={loginModalVisible && !isAuthenticated}
+        footer={null}
+        closable={false}
+        maskClosable={false}
+      >
+        <Form
+          name="loginForm"
+          layout="vertical"
+          onFinish={handleLogin}
+        >
+          <Form.Item
+            name="username"
+            label="用户名"
+            rules={[{ required: true, message: '请输入用户名' }]}
+          >
+            <Input placeholder="请输入用户名" />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label="密码"
+            rules={[{ required: true, message: '请输入密码' }]}
+          >
+            <Input.Password placeholder="请输入密码" />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              登录
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* 已登录时显示主窗口 */}
+      {isAuthenticated && currentUser && <MainWindow currentUser={currentUser} />}
     </div>
   );
 }

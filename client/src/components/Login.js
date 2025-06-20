@@ -182,18 +182,6 @@ localStorage.setItem('halloChat_password_time', Date.now().toString());
 export default Login;
 
 
-function Login() {
-  // 登录按钮点击事件
-  const handleLogin = async () => {
-    try {
-      // ...登录逻辑
-      ipcRenderer.send('log-info', '用户登录成功：' + username);
-    } catch (err) {
-      ipcRenderer.send('log-error', '登录失败：' + err.message);
-    }
-  };
-}
-
 const handleServerSelect = (selected) => {
   try {
     localStorage.setItem('serverConfig', JSON.stringify({

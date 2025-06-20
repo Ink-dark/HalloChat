@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import authService from '../services/authService';
 import './Logout.css';
 
