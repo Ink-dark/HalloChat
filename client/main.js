@@ -1,4 +1,33 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const log = require('electron-log');
+
+// 配置日志
+log.transports.file.level = 'info';
+log.transports.console.level = 'info';
+
+// 模拟服务器发现
+ipcMain.handle('discover-servers', async () => {
+  log.info('正在搜索局域网服务器...');
+  // 实际应用中应实现真实的服务器发现逻辑
+  return [{
+    id: 'local-server',
+    name: '本地服务器',
+    address: 'localhost',
+    port: 3000
+  }];
+});
+
+// 暴露日志接口
+ipcMain.on('log', (event, level, message) => {
+  if (log[level]) {
+    log[level](message);
+  }
+});
+
+// 暴露对话框接口
+ipcMain.on('show-error-box', (event, title, content) => {
+  dialog.showErrorBox(title, content);
+});
 const path = require('path');
 
 // 创建窗口函数
@@ -18,8 +47,8 @@ function createWindow() {
   // 加载React开发服务器
   mainWindow.loadURL('http://localhost:3000');
 
-  // 打开开发者工具
-  mainWindow.webContents.openDevTools();
+  // 暂时禁用自动打开开发者工具以解决Autofill API错误
+  // mainWindow.webContents.openDevTools();
 }
 
 // 应用就绪后创建窗口

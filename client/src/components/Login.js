@@ -10,6 +10,8 @@ import './Login.css';
 
 const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState(localStorage.getItem('halloChat_username') || '');
+  const [serverPort, setServerPort] = useState('3000');
+  const [foundServers, setFoundServers] = useState([]);
   const [password, setPassword] = useState(() => {
   const savedPassword = localStorage.getItem('halloChat_password');
   const savedTime = localStorage.getItem('halloChat_password_time');
@@ -23,9 +25,7 @@ const Login = ({ onLoginSuccess }) => {
   const [isManualInput, setIsManualInput] = useState(false);
   const [rememberMe, setRememberMe] = useState(localStorage.getItem('halloChat_remember') === 'true');
   const [serverAddress, setServerAddress] = useState(localStorage.getItem('halloChat_server') || '');
-  const [serverPort, setServerPort] = useState('3000');
   const [isSearching, setIsSearching] = useState(false);
-  const [foundServers, setFoundServers] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,7 +35,7 @@ const Login = ({ onLoginSuccess }) => {
       try {
         // 使用MDNS协议搜索局域网服务器
         try {
-          const servers = await window.electron.ipcRenderer.invoke('discover-servers');
+          const servers = await window.Electron.ipcRenderer.invoke('discover-servers');
           setFoundServers(servers);
           setIsSearching(false);
         } catch (err) {
@@ -161,44 +161,6 @@ localStorage.setItem('halloChat_password_time', Date.now().toString());
     }
   };
 
-  return (
-    <div className="login-container">
-      <h2>欢迎使用HalloChat</h2>
-      {isRegistering ? (
-        <form onSubmit={handleRegister}>
-          {/* 注册表单内容 */}
-        </form>
-      ) : (
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
-            <label htmlFor="username">用户名</label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required />
-          </div>
-          {/* 其他登录表单字段 */}
-        </form>
-      )}
-      {/* 服务器选择等其他内容 */}
-    </div>
-  );
-};
-
-  // 初始化时读取缓存
-  useEffect(() => {
-    const cached = localStorage.getItem('serverConfig');
-    if (cached) {
-      try {
-        const { ip, port } = JSON.parse(cached);
-        setServerAddress(ip);
-        setServerPort(String(port));
-      } catch {}
-    }
-  }, []);
-
   // 添加存储状态错误提示
   const [storageError, setStorageError] = useState('');
 
@@ -207,36 +169,20 @@ localStorage.setItem('halloChat_password_time', Date.now().toString());
     try {
       localStorage.setItem(key, value);
       setStorageError('');
-      window.electron.log.info('配置存储成功');
+      window.electron.ipcRenderer.send('log', 'info', '配置存储成功');
     } catch (err) {
       const errorMsg = `本地存储失败: ${err.message}`;
       setStorageError(errorMsg);
-      window.electron.log.error(errorMsg);
+      window.electron.ipcRenderer.send('log', 'error', errorMsg);
       
-      // 触发错误弹窗
-      window.electron.dialog.showErrorBox(
+      // 通过IPC触发错误弹窗
+      window.electron.ipcRenderer.send('show-error-box',
         '存储异常',
-        '无法保存服务器配置，请检查浏览器存储权限或清理空间',
-        ['知道了']
+        '无法保存服务器配置，请检查浏览器存储权限或清理空间'
       );
     }
   };
 
-  const handleServerSelect = (selected) => {
-    try {
-      localStorage.setItem('serverConfig', JSON.stringify({
-        ip: selected.ip,
-        port: selected.port,
-        lastUsed: Date.now()
-      }));
-    } catch (err) {
-      console.warn('本地存储失败:', err);
-    }
-    setServerAddress(selected.ip);
-    setServerPort(String(selected.port)); // 显式转换为字符串
-    setIsManualInput(true);
-    setError(''); // 清空错误状态
-  };
 
   // 初始化时读取缓存
   useEffect(() => {
@@ -251,34 +197,32 @@ localStorage.setItem('halloChat_password_time', Date.now().toString());
   }, []);
 
   // 更新端口验证逻辑
-  const portNum = parseInt(serverPort, 10);
-  const serverList = foundServers.map(server => (
-    <ServerItem 
-      key={server.id} 
-      onClick={() => handleServerSelect(server)}
-    >
-      {server.name}
-    </ServerItem>
-  ));
+
+  return (
+    <div className="login-container">
+      <h2>欢迎使用HalloChat</h2>
+      {isRegistering ? (
+        <form onSubmit={handleRegister}>
+          {/* 注册表单内容 */}
+        </form>
+      ) : (
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label htmlFor="username">用户名</label>
+            <input
+              id="username"
+              type="text"
+              value={username} 
+              onChange={(e) => setUsername(e.target.value)} 
+              required />
+          </div>
+          {/* 其他登录表单字段 */}
+        </form>
+      )}
+      {/* 服务器选择等其他内容 */}
+    </div>
+  )
+};
+
 
 export default Login;
-
-// 更新存储调用方式
-safeSetStorage('serverConfig', encrypted);
-
-// 在渲染层添加错误提示
-{storageError && (
-  <Alert type="warning" message={storageError} />
-)}
-
-// 移除2FA相关状态
-const [code, setCode] = useState('');
-{/* 删除双因素认证表单 */}
-<FormControl>
-  <InputLabel>验证码</InputLabel>
-  <Input
-    value={code}
-    onChange={(e) => setCode(e.target.value)}
-  />
-</FormControl>
-{/* 其他表单 */}
