@@ -50,7 +50,7 @@ const ContactList = ({
   const [filteredContacts, setFilteredContacts] = useState([]);
   
   useEffect(() => {
-    const filtered = contacts.filter(contact => 
+    const filtered = (contacts || []).filter(contact => 
       contact.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contact.uniqueId.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -114,7 +114,7 @@ const ContactList = ({
         </div>
       </div>
         <div className="contacts-scroll">
-          {(searchTerm ? filteredContacts : contacts).filter(contact => {
+          {(searchTerm ? filteredContacts : contacts || []).filter(contact => {
     if (settings.chatListStarred && !contact.isStarred) return false;
     if (settings.chatListPinned && !contact.isPinned) return false;
     return true;
