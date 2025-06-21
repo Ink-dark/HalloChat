@@ -59,3 +59,23 @@ button[type="submit"]:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
+
+.toggle-form {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.toggle-form button {
+  background: none;
+  border: none;
+  color: #4285f4;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.toggle-form button:hover {
+  color: #3367d6;
+  text-decoration: none;
+}
