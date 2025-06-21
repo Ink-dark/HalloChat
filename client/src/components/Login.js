@@ -236,7 +236,15 @@ localStorage.setItem('halloChat_password_time', Date.now().toString());
               onChange={(e) => setUsername(e.target.value)} 
               required />
           </div>
-          {/* 其他登录表单字段 */}
+          <div className="form-group">
+            <label htmlFor="password">密码</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required />
+          </div>
           <div className="toggle-form">
             没有账号？<button onClick={() => setIsRegistering(true)}>立即注册</button>
           </div>
