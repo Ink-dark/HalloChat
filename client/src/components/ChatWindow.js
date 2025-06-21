@@ -102,6 +102,59 @@ function ChatWindow({ currentUser, contact }) {
 
 
 
+  const handleRecallMessage = async (messageId) => {
+    try {
+      setError(null);
+      const success = await chatService.recallMessage(messageId);
+      if (success) {
+        setMessages(prev => prev.map(msg => {
+          if (msg.id === messageId) {
+            const message = new Message({
+              ...msg,
+              isRecalled: true,
+              content: '[消息已撤回]',
+              originalContent: msg.content,
+              canBeEdited: (new Date().getTime() - msg.timestamp) < 120000
+            });
+            message.recall();
+            return message;
+          }
+          return msg;
+        }));
+      }
+    } catch (err) {
+      setError('撤回消息失败: ' + err.message);
+    }
+  };
+
+  const handleEditSubmit = async (messageId) => {
+    try {
+      setError(null);
+      if (!editContent.trim()) {
+        setError('编辑内容不能为空');
+        return;
+      }
+      
+      const success = await chatService.editMessage(messageId, editContent);
+      if (success) {
+        setMessages(prev => prev.map(msg => 
+          msg.id === messageId ? { 
+            ...msg, 
+            content: editContent, 
+            isEdited: true,
+            timestamp: new Date().toISOString() 
+          } : msg
+        ));
+        setEditingMessageId(null);
+      } else {
+        setError('编辑消息失败: 服务器未响应');
+      }
+    } catch (err) {
+      setError('编辑消息失败: ' + err.message);
+      console.error('编辑消息失败:', err);
+    }
+  };
+
   return (
     <div className="chat-window">
       {error && <div className="error-message">{error}</div>}
@@ -187,59 +240,6 @@ function ChatWindow({ currentUser, contact }) {
       </div>
     </div>
   );
-}
-
-  const handleRecallMessage = async (messageId) => {
-    try {
-      setError(null);
-      const success = await chatService.recallMessage(messageId);
-      if (success) {
-        setMessages(prev => prev.map(msg => {
-          if (msg.id === messageId) {
-            const message = new Message({
-              ...msg,
-              isRecalled: true,
-              content: '[消息已撤回]',
-              originalContent: msg.content,
-              canBeEdited: (new Date().getTime() - msg.timestamp) < 120000
-            });
-            message.recall();
-            return message;
-          }
-          return msg;
-        }));
-      }
-    } catch (err) {
-      setError('撤回消息失败: ' + err.message);
-    }
-  };
-
-  const handleEditSubmit = async (messageId) => {
-    try {
-      setError(null);
-      if (!editContent.trim()) {
-        setError('编辑内容不能为空');
-        return;
-      }
-      
-      const success = await chatService.editMessage(messageId, editContent);
-      if (success) {
-        setMessages(prev => prev.map(msg => 
-          msg.id === messageId ? { 
-            ...msg, 
-            content: editContent, 
-            isEdited: true,
-            timestamp: new Date().toISOString() 
-          } : msg
-        ));
-        setEditingMessageId(null);
-      } else {
-        setError('编辑消息失败: 服务器未响应');
-      }
-    } catch (err) {
-      setError('编辑消息失败: ' + err.message);
-      console.error('编辑消息失败:', err);
-    }
-  };
+};
 
 export default ChatWindow;
