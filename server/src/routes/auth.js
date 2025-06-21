@@ -16,8 +16,7 @@ router.post('/login',
         minUppercase: 1,
         minNumbers: 1
       }).withMessage('密码需包含大小写字母和数字')
-  ],
-  (req, res) => {
+  ],  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ 
@@ -25,10 +24,16 @@ router.post('/login',
         details: errors.array() 
       });
     }
-    // TODO: 实际登录逻辑
-    res.json({ success: true });
-    // 登录成功逻辑
-    const user = { id: 123, username: req.body.username };
+    const AuthService = require('../services/auth.service');
+    const { user, error } = await AuthService.validateUser(
+      req.body.username,
+      req.body.password
+    );
+
+    if (error) {
+      return res.status(401).json({ error });
+    }
+
     const generateTokens = (user) => {
       const accessToken = jwt.sign(
         { userId: user.id },
