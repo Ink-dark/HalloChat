@@ -9,7 +9,7 @@ const ContactList = ({
   onStartEncryptedChat,
   onCreateGroup,
   onCreateChannel,
-  settings 
+  settings = {}
 }) => {
   const handleSettingChange = (contactId, settings) => {
     // 处理联系人设置变更的逻辑
