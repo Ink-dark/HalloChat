@@ -203,7 +203,27 @@ localStorage.setItem('halloChat_password_time', Date.now().toString());
       <h2>欢迎使用HalloChat</h2>
       {isRegistering ? (
         <form onSubmit={handleRegister}>
-          {/* 注册表单内容 */}
+          <div className="form-group">
+            <label htmlFor="email">邮箱</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required />
+          </div>
+          <div className="form-group">
+            <label htmlFor="confirmPassword">确认密码</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required />
+          </div>
+          <div className="toggle-form">
+            已有账号？<button onClick={() => setIsRegistering(false)}>立即登录</button>
+          </div>
         </form>
       ) : (
         <form onSubmit={handleLogin}>
@@ -217,6 +237,9 @@ localStorage.setItem('halloChat_password_time', Date.now().toString());
               required />
           </div>
           {/* 其他登录表单字段 */}
+          <div className="toggle-form">
+            没有账号？<button onClick={() => setIsRegistering(true)}>立即注册</button>
+          </div>
         </form>
       )}
       {/* 服务器选择等其他内容 */}
