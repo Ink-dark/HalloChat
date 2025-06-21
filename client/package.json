@@ -5,23 +5,28 @@
   "private": true,
   "dependencies": {
     "antd": "^5.26.1",
+    "browserify-fs": "^1.0.0",
     "electron-builder": "^24.6.4",
     "electron-log": "^5.4.0",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.7.2",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently -k -n \"REACT,ELECTRON\" \"react-app-rewired start\" \"wait-on http://localhost:3000 && electron .\"",
+    "start": "concurrently -k -n \"REACT,ELECTRON\" \"npx craco start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-start": "electron .",
-    "build": "react-app-rewired build",
+    "build": "craco build",
     "package": "electron-builder build --windows",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
+    "root": true,
     "extends": [
       "react-app",
       "react-app/jest"
@@ -40,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "concurrently": "^9.1.2",
     "electron": "^36.5.0",
     "wait-on": "^8.0.3"

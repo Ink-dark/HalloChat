@@ -214,12 +214,6 @@ function ChatWindow({ currentUser, contact }) {
     }
   };
 
-
-
-
-
-
-
   const handleEditSubmit = async (messageId) => {
     try {
       setError(null);
@@ -247,9 +241,5 @@ function ChatWindow({ currentUser, contact }) {
       console.error('编辑消息失败:', err);
     }
   };
-
-
-
-
 
 export default ChatWindow;

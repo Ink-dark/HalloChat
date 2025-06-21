@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import Alert from '@mui/material/Alert';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Input from '@mui/material/Input';
+import CryptoJS from 'crypto-js';
+import ServerItem from './ServerItem'; // 假设ServerItem在同一目录下
 import authService from '../services/authService';
 import './Login.css';
-import { ipcRenderer } from 'electron';
 
 const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState(localStorage.getItem('halloChat_username') || '');
@@ -15,11 +20,11 @@ const Login = ({ onLoginSuccess }) => {
   }
   return savedPassword || '';
 });
-  const [isManualInput, _setIsManualInput] = useState(false); // eslint-disable-line
-  const [rememberMe, _setRememberMe] = useState(localStorage.getItem('halloChat_remember') === 'true'); // eslint-disable-line
-  const [serverAddress, _setServerAddress] = useState(localStorage.getItem('halloChat_server') || ''); // eslint-disable-line
-  const [serverPort, _setServerPort] = useState('3000'); // eslint-disable-line
-  const [isSearching, _setIsSearching] = useState(false); // eslint-disable-line
+  const [isManualInput, setIsManualInput] = useState(false);
+  const [rememberMe, setRememberMe] = useState(localStorage.getItem('halloChat_remember') === 'true');
+  const [serverAddress, setServerAddress] = useState(localStorage.getItem('halloChat_server') || '');
+  const [serverPort, setServerPort] = useState('3000');
+  const [isSearching, setIsSearching] = useState(false);
   const [foundServers, setFoundServers] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +53,7 @@ const Login = ({ onLoginSuccess }) => {
     }
   }, [isManualInput]);
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
@@ -93,10 +98,13 @@ const Login = ({ onLoginSuccess }) => {
 
       if (rememberMe) {
         localStorage.setItem('halloChat_username', username);
-        localStorage.setItem('halloChat_password', password);
+        // 使用环境变量或安全存储的密钥
+const ENCRYPTION_KEY = process.env.REACT_APP_ENCRYPTION_KEY || 'fallback-key-change-in-production';
+const encrypted = CryptoJS.AES.encrypt(password, ENCRYPTION_KEY).toString();
+localStorage.setItem('halloChat_password', encrypted);
 localStorage.setItem('halloChat_password_time', Date.now().toString());
         localStorage.setItem('halloChat_server', fullAddress);
-        localStorage.setItem('halloChat_server_name', serverName || customConnectionName || serverAddress);
+        localStorage.setItem('halloChat_server_name', foundServers[0]?.name || serverAddress);
         localStorage.setItem('halloChat_remember', 'true');
       } else {
         localStorage.removeItem('halloChat_username');
@@ -179,71 +187,81 @@ localStorage.setItem('halloChat_password_time', Date.now().toString());
   );
 };
 
-export default Login;
+  // 初始化时读取缓存
+  useEffect(() => {
+    const cached = localStorage.getItem('serverConfig');
+    if (cached) {
+      try {
+        const { ip, port } = JSON.parse(cached);
+        setServerAddress(ip);
+        setServerPort(String(port));
+      } catch {}
+    }
+  }, []);
 
+  // 添加存储状态错误提示
+  const [storageError, setStorageError] = useState('');
 
-const handleServerSelect = (selected) => {
-  try {
-    localStorage.setItem('serverConfig', JSON.stringify({
-      ip: selected.ip,
-      port: selected.port,
-      lastUsed: Date.now()
-    }));
-  } catch (err) {
-    console.warn('本地存储失败:', err);
-  }
-  setServerAddress(selected.ip);
-  setServerPort(String(selected.port)); // 显式转换为字符串
-  setIsManualInput(true);
-  setError(''); // 清空错误状态
-};
-
-// 更新端口验证逻辑
-const portNum = parseInt(serverPort, 10);
-{foundServers.map(yyserver => (
-  <ServerItem 
-    key={yyserver.id} 
-    onClick={() => handleServerSelect(server)}
-  >
-    {yyserver.name}
-  </ServerItem>
-))}
-
-// 初始化时读取缓存
-useEffect(() => {
-  const cached = localStorage.getItem('serverConfig');
-  if (cached) {
+  // 增强型存储方法
+  const safeSetStorage = (key, value) => {
     try {
-      const { ip, port } = JSON.parse(cached);
-      setServerAddress(ip);
-      setServerPort(String(port));
-    } catch {} 
-  }
-}, []);
+      localStorage.setItem(key, value);
+      setStorageError('');
+      window.electron.log.info('配置存储成功');
+    } catch (err) {
+      const errorMsg = `本地存储失败: ${err.message}`;
+      setStorageError(errorMsg);
+      window.electron.log.error(errorMsg);
+      
+      // 触发错误弹窗
+      window.electron.dialog.showErrorBox(
+        '存储异常',
+        '无法保存服务器配置，请检查浏览器存储权限或清理空间',
+        ['知道了']
+      );
+    }
+  };
 
+  const handleServerSelect = (selected) => {
+    try {
+      localStorage.setItem('serverConfig', JSON.stringify({
+        ip: selected.ip,
+        port: selected.port,
+        lastUsed: Date.now()
+      }));
+    } catch (err) {
+      console.warn('本地存储失败:', err);
+    }
+    setServerAddress(selected.ip);
+    setServerPort(String(selected.port)); // 显式转换为字符串
+    setIsManualInput(true);
+    setError(''); // 清空错误状态
+  };
 
-// 添加存储状态错误提示
-const [storageError, setStorageError] = useState('');
+  // 初始化时读取缓存
+  useEffect(() => {
+    const cached = localStorage.getItem('serverConfig');
+    if (cached) {
+      try {
+        const { ip, port } = JSON.parse(cached);
+        setServerAddress(ip);
+        setServerPort(String(port));
+      } catch {}
+    }
+  }, []);
 
-// 增强型存储方法
-const safeSetStorage = (key, value) => {
-  try {
-    localStorage.setItem(key, value);
-    setStorageError('');
-    window.electron.log.info('配置存储成功');
-  } catch (err) {
-    const errorMsg = `本地存储失败: ${err.message}`;
-    setStorageError(errorMsg);
-    window.electron.log.error(errorMsg);
-    
-    // 触发错误弹窗
-    window.electron.dialog.showErrorBox({
-      title: '存储异常',
-      content: '无法保存服务器配置，请检查浏览器存储权限或清理空间',
-      buttons: ['知道了']
-    });
-  }
-};
+  // 更新端口验证逻辑
+  const portNum = parseInt(serverPort, 10);
+  const serverList = foundServers.map(server => (
+    <ServerItem 
+      key={server.id} 
+      onClick={() => handleServerSelect(server)}
+    >
+      {server.name}
+    </ServerItem>
+  ));
+
+export default Login;
 
 // 更新存储调用方式
 safeSetStorage('serverConfig', encrypted);
