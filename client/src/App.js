@@ -9,6 +9,13 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [isLoginMode, setIsLoginMode] = useState(true);
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    setLoginModalVisible(true);
+  };
 
   const handleDisclaimerClose = () => {
     if (hasAgreed) {
@@ -65,7 +72,7 @@ function App() {
 
       {/* 登录弹窗 */}
       <Modal
-        title="用户登录"
+        title={isLoginMode ? "用户登录" : "用户注册"}
         visible={loginModalVisible && !isAuthenticated}
         footer={null}
         closable={false}
@@ -92,14 +99,19 @@ function App() {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
-              登录
+              {isLoginMode ? "登录" : "注册"}
             </Button>
           </Form.Item>
+          <div style={{ textAlign: 'center', marginTop: 16 }}>
+            <a onClick={() => setIsLoginMode(!isLoginMode)} style={{ color: '#1890ff', cursor: 'pointer' }}>
+              {isLoginMode ? '没有账号？去注册' : '已有账号？去登录'}
+            </a>
+          </div>
         </Form>
       </Modal>
 
       {/* 已登录时显示主窗口 */}
-      {isAuthenticated && currentUser && <MainWindow currentUser={currentUser} />}
+      {isAuthenticated && currentUser && <MainWindow currentUser={currentUser} onLoginSuccess={handleLogout} />}
     </div>
   );
 }
