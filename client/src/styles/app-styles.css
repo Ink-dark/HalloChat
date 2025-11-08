@@ -1,0 +1,94 @@
+.app-container {
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.main-title {
+  color: #1890ff;
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.sub-title {
+  color: #666;
+  font-size: 18px;
+}
+
+.start-button {
+  margin-top: 24px;
+  width: 240px;
+  height: 48px;
+  font-size: 20px;
+  border-radius: 24px;
+  transition: all 0.3s;
+}
+
+.start-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(24,144,255,0.4);
+}
+
+.disclaimer-modal {
+  top: 20px;
+}
+
+.disclaimer-body {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.server-error {
+  color: #ff4d4f;
+  margin-bottom: 16px;
+}
+
+.no-server-message {
+  text-align: center;
+  padding: 24px;
+}
+
+.no-server-text {
+  margin-bottom: 16px;
+}
+
+.add-server-button {
+  margin-top: 16px;
+}
+
+.test-connection-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.connection-status-success {
+  margin-left: 8px;
+  color: green;
+}
+
+.connection-status-failed {
+  margin-left: 8px;
+  color: red;
+}
+
+.registration-success-content {
+  padding: 20px;
+}
+
+.registration-info {
+  margin-bottom: 8px;
+}
+
+.registration-label {
+  font-weight: bold;
+}

@@ -1,0 +1,295 @@
+/* ChatWindow 主容器 */
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 聊天头部 */
+.chat-header {
+  padding: 12px 16px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.chat-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+}
+
+/* 消息容器 */
+.messages-container {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background-color: #fafafa;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+/* 无消息提示 */
+.no-messages {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 14px;
+}
+
+/* 错误消息 */
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 8px 16px;
+  border-bottom: 1px solid #ffcdd2;
+  font-size: 14px;
+}
+
+/* 消息气泡 */
+.message {
+  max-width: 70%;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 18px;
+  position: relative;
+  word-wrap: break-word;
+  line-height: 1.4;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.sent {
+  align-self: flex-end;
+  background-color: #0084ff;
+  color: white;
+  margin-left: auto;
+}
+
+.message.received {
+  align-self: flex-start;
+  background-color: #e4e6eb;
+  color: #050505;
+}
+
+.message-time {
+  font-size: 0.8em;
+  opacity: 0.7;
+  display: block;
+  margin-top: 4px;
+  text-align: right;
+}
+
+.message.received .message-time {
+  text-align: left;
+}
+
+/* 消息右键菜单 */
+.message-menu {
+  position: fixed;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: none;
+  min-width: 120px;
+  overflow: hidden;
+}
+
+.message-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.message-menu button:hover {
+  background-color: #f5f5f5;
+}
+
+/* 编辑消息输入框 */
+.message input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 18px;
+  outline: none;
+  font-size: 14px;
+}
+
+.message button {
+  margin-left: 8px;
+  padding: 6px 12px;
+  background-color: #0084ff;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.message button:hover {
+  background-color: #0066cc;
+}
+
+.message button:last-child {
+  background-color: #666;
+}
+
+.message button:last-child:hover {
+  background-color: #444;
+}
+
+/* 撤回消息重新编辑按钮 */
+.edit-recalled-btn {
+  background: transparent;
+  color: #0084ff;
+  border: none;
+  padding: 2px 8px;
+  margin-left: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.edit-recalled-btn:hover {
+  opacity: 0.8;
+}
+
+/* 输入框区域 */
+.message-input {
+  display: flex;
+  padding: 12px 16px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #ddd;
+  align-items: center;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  border-radius: 22px;
+  outline: none;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.message-input input:focus {
+  border-color: #0084ff;
+}
+
+.message-input button {
+  margin-left: 12px;
+  padding: 10px 20px;
+  background-color: #0084ff;
+  color: white;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.message-input button:hover {
+  background-color: #0066cc;
+}
+
+.message-input button:active {
+  transform: scale(0.98);
+}
+
+/* 加密聊天特殊样式 */
+.chat-window.encrypted .chat-header {
+  background-color: #e3f2fd;
+}
+
+/* 群组聊天特殊样式 */
+.chat-window.group .chat-header {
+  background-color: #f1f8e9;
+}
+
+/* 频道聊天特殊样式 */
+.chat-window.channel .chat-header {
+  background-color: #fce4ec;
+}
+
+/* 正在输入指示器 */
+.typing-indicator {
+  font-size: 0.8em;
+  color: #666;
+  margin-left: 8px;
+  font-style: italic;
+  animation: typingDots 1.4s infinite;
+}
+
+@keyframes typingDots {
+  0%, 60%, 100% {
+    opacity: 0.3;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+/* 安全指示器 */
+.security-indicator {
+  font-size: 0.8em;
+  color: #4caf50;
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.security-indicator::before {
+  content: '🔒';
+  margin-right: 4px;
+}
