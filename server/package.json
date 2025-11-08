@@ -1,0 +1,72 @@
+{
+  "name": "hallo-chat-server",
+  "version": "2.1.1-alpha",
+  "description": "HalloChat 实时聊天服务器 - MongoDB版本",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "seed": "node src/seeders/index.js",
+    "build": "echo 'Build completed'",
+    "db:init": "node src/scripts/init-db.js",
+    "db:seed": "node src/scripts/seed-db.js",
+    "db:reset": "node src/scripts/reset-db.js"
+  },
+  "keywords": [
+    "chat",
+    "real-time",
+    "websocket",
+    "express",
+    "nodejs",
+    "mongodb",
+    "mongoose"
+  ],
+  "author": "墨染柒DarkSeven",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.8.1",
+    "express-validator": "^7.2.1",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "mdns-js": "^1.0.3",
+    "moment": "^2.29.4",
+    "mongoose": "^7.5.0",
+    "morgan": "^1.10.1",
+    "multer": "^1.4.5-lts.1",
+    "redis": "^5.8.3",
+    "sharp": "^0.32.4",
+    "socket.io": "^4.7.2",
+    "uuid": "^9.0.0",
+    "validator": "^13.9.0",
+    "winston": "^3.10.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@types/bcryptjs": "^2.4.6",
+    "eslint": "^8.45.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.6.2",
+    "mongodb-memory-server": "^10.2.1",
+    "nodemon": "^3.0.1",
+    "socket.io-client": "^4.8.1",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

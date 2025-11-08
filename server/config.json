@@ -1,0 +1,68 @@
+{
+  "port": 7932,
+  "maxConnections": 1000,
+  "forceLogoutEnabled": true,
+  "logLevel": "info",
+  "ssl": {
+    "enabled": false,
+    "certPath": "./ssl/cert.pem",
+    "keyPath": "./ssl/key.pem"
+  },
+  "database": {
+    "uri": "mongodb://localhost:27017/hallochat",
+    "options": {
+      "useNewUrlParser": true,
+      "useUnifiedTopology": true,
+      "maxPoolSize": 10,
+      "minPoolSize": 2,
+      "maxIdleTimeMS": 10000,
+      "serverSelectionTimeoutMS": 5000,
+      "socketTimeoutMS": 45000,
+      "bufferMaxEntries": 0,
+      "bufferCommands": false
+    }
+  },
+  "mdns": {
+    "enabled": true,
+    "serviceName": "hallo-chat",
+    "displayName": "Hallo Chat Server",
+    "serviceType": "tcp"
+  },
+  "logging": {
+    "level": "info",
+    "file": "logs/server.log",
+    "maxFiles": 10,
+    "maxSize": "10m"
+  },
+  "security": {
+    "jwtSecret": "your-secret-key-change-this-in-production",
+    "tokenExpiration": "24h",
+    "bcryptRounds": 12,
+    "maxLoginAttempts": 5,
+    "lockTime": 900000
+  },
+  "rateLimiting": {
+    "windowMs": 60000,
+    "max": 100,
+    "skipSuccessfulRequests": false,
+    "standardHeaders": true,
+    "legacyHeaders": false
+  },
+  "upload": {
+    "maxFileSize": 10485760,
+    "allowedMimeTypes": [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+      "video/mp4",
+      "video/webm",
+      "audio/mp3",
+      "audio/wav",
+      "application/pdf",
+      "text/plain"
+    ],
+    "storagePath": "./uploads",
+    "maxFilesPerRequest": 5
+  }
+}
