@@ -1,0 +1,61 @@
+# 忽略敏感文件和环境目录
+.env
+.env.local
+node_modules/
+.idea/
+.vscode/
+server/redis/dump.rdb
+
+# 客户端构建和依赖
+client/node_modules/
+client/build/
+client/dist/
+client/app-build/
+client/temp_unpack/
+client/coverage/
+
+# 服务器构建和依赖
+server/node_modules/
+server/build/
+server/dist/
+
+# 日志文件
+server/logs/
+logs/
+
+# Redis相关文件
+server/redis/
+server/redis.zip
+
+# 操作系统和编辑器文件
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+*.tmp
+
+# 编译生成文件
+*.exe
+*.dll
+*.pdb
+
+# 测试报告
+server/coverage/
+client/coverage/
+
+# 数据库备份
+*.bak
+*.dump
+dump.rdb
+
+# 特殊忽略vscode文件夹
+*.vs
+
+# 忽略package-lock.json
+package-lock.json
+
+# 忽略导出文件夹alpha
+alpha/
+
+
+
