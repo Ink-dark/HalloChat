@@ -324,8 +324,22 @@ class ServerManager:
                 
                 # 启动Node.js服务器
                 # 使用npm start命令启动服务器，确保在server目录下执行
+                # 尝试找到npm的完整路径
+                npm_path = "npm"
+                if sys.platform == 'win32':
+                    # 在Windows上尝试找到npm.cmd或npm.bat
+                    try:
+                        # 尝试从环境变量PATH中找到npm
+                        for path in os.environ["PATH"].split(os.pathsep):
+                            npm_candidate = os.path.join(path, "npm.cmd")
+                            if os.path.exists(npm_candidate):
+                                npm_path = npm_candidate
+                                break
+                    except:
+                        pass  # 如果找不到，就使用默认的npm
+                
                 self.server_process = subprocess.Popen(
-                    ["npm", "start"],
+                    [npm_path, "start"],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
@@ -357,8 +371,23 @@ class ServerManager:
             
             # 运行npm install命令
             current_dir = os.path.dirname(os.path.abspath(__file__))
+            
+            # 尝试找到npm的完整路径
+            npm_path = "npm"
+            if sys.platform == 'win32':
+                # 在Windows上尝试找到npm.cmd或npm.bat
+                try:
+                    # 尝试从环境变量PATH中找到npm
+                    for path in os.environ["PATH"].split(os.pathsep):
+                        npm_candidate = os.path.join(path, "npm.cmd")
+                        if os.path.exists(npm_candidate):
+                            npm_path = npm_candidate
+                            break
+                except:
+                    pass  # 如果找不到，就使用默认的npm
+            
             install_process = subprocess.Popen(
-                ["npm", "install"],
+                [npm_path, "install"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -392,8 +421,23 @@ class ServerManager:
         """静默安装依赖（用于自动检查时）"""
         try:
             current_dir = os.path.dirname(os.path.abspath(__file__))
+            
+            # 尝试找到npm的完整路径
+            npm_path = "npm"
+            if sys.platform == 'win32':
+                # 在Windows上尝试找到npm.cmd或npm.bat
+                try:
+                    # 尝试从环境变量PATH中找到npm
+                    for path in os.environ["PATH"].split(os.pathsep):
+                        npm_candidate = os.path.join(path, "npm.cmd")
+                        if os.path.exists(npm_candidate):
+                            npm_path = npm_candidate
+                            break
+                except:
+                    pass  # 如果找不到，就使用默认的npm
+            
             result = subprocess.run(
-                ["npm", "install", "--silent"],
+                [npm_path, "install", "--silent"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -982,7 +1026,21 @@ def main():
     
     # 检查npm是否安装
     try:
-        subprocess.run(["npm", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        # 尝试找到npm的完整路径
+        npm_path = "npm"
+        if sys.platform == 'win32':
+            # 在Windows上尝试找到npm.cmd或npm.bat
+            try:
+                # 尝试从环境变量PATH中找到npm
+                for path in os.environ["PATH"].split(os.pathsep):
+                    npm_candidate = os.path.join(path, "npm.cmd")
+                    if os.path.exists(npm_candidate):
+                        npm_path = npm_candidate
+                        break
+            except:
+                pass  # 如果找不到，就使用默认的npm
+        
+        subprocess.run([npm_path, "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
     except (subprocess.SubprocessError, FileNotFoundError):
         print("错误: 未找到npm，请先安装Node.js和npm")
         sys.exit(1)
