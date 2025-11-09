@@ -1,0 +1,12 @@
+# HalloChat server management console required Python libraries
+# Note: This project only uses Python standard libraries, no additional third-party libraries needed
+
+# Used standard libraries:
+# - os: Operating system interface
+# - sys: Python interpreter related functions
+# - time: Time-related functions
+# - socket: Network communication functionality
+# - subprocess: Execute external commands
+# - platform: Get system information
+# - tkinter: GUI interface library
+# - threading: Multi-threading support
