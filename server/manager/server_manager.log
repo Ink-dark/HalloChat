@@ -1,0 +1,178 @@
+[2025-11-12 00:01:55] HalloChat服务器管理器启动
+[2025-11-12 00:05:39] HalloChat服务器管理器启动
+[2025-11-12 00:05:42] 开始下载MongoDB...
+[2025-11-12 00:05:42] 下载MongoDB时出错: No module named 'requests'
+[2025-11-12 00:07:06] HalloChat服务器管理器启动
+[2025-11-12 00:07:08] 开始下载MongoDB...
+[2025-11-12 00:07:09] 开始下载MongoDB安装程序: https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-7.0.0-signed.msi
+[2025-11-12 00:08:07] MongoDB安装程序下载完成: C:\Users\haoya\AppData\Local\Temp\tmp9i3ufb3_\mongodb-installer.msi
+[2025-11-12 00:08:07] 提示用户以管理员权限运行安装向导
+[2025-11-12 00:12:55] MongoDB下载安装成功
+[2025-11-12 00:13:00] 开始安装依赖...
+[2025-11-12 00:13:54] [npm] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[2025-11-12 00:13:55] [npm] npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+[2025-11-12 00:13:55] [npm] npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+[2025-11-12 00:13:55] [npm] npm warn deprecated supertest@6.3.4: Please upgrade to supertest v7.1.3+, see release notes at https://github.com/forwardemail/supertest/releases/tag/v7.1.3 - maintenance is supported by Forward Email @ https://forwardemail.net
+[2025-11-12 00:13:55] [npm] npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+[2025-11-12 00:13:55] [npm] npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+[2025-11-12 00:13:55] [npm] npm warn deprecated multer@1.4.5-lts.2: Multer 1.x is impacted by a number of vulnerabilities, which have been patched in 2.x. You should upgrade to the latest 2.x version.
+[2025-11-12 00:13:56] [npm] npm warn deprecated superagent@8.1.2: Please upgrade to superagent v10.2.2+, see release notes at https://github.com/forwardemail/superagent/releases/tag/v10.2.2 - maintenance is supported by Forward Email @ https://forwardemail.net
+[2025-11-12 00:13:57] [npm] npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+[2025-11-12 00:22:14] HalloChat服务器管理器启动
+[2025-11-12 00:22:22] 开始安装依赖...
+[2025-11-12 00:22:25] [npm] up to date, audited 777 packages in 3s
+[2025-11-12 00:22:25] [npm] 161 packages are looking for funding
+[2025-11-12 00:22:25] [npm] run `npm fund` for details
+[2025-11-12 00:22:25] [npm] 2 high severity vulnerabilities
+[2025-11-12 00:22:25] [npm] To address all issues (including breaking changes), run:
+[2025-11-12 00:22:25] [npm] npm audit fix --force
+[2025-11-12 00:22:25] [npm] Run `npm audit` for details.
+[2025-11-12 00:22:25] 依赖安装成功
+[2025-11-12 00:22:25] 依赖安装过程完成（无论成功或失败）
+[2025-11-12 00:22:29] 检测到依赖未安装，正在尝试安装...
+[2025-11-12 00:22:31] 正在启动服务器...
+[2025-11-12 00:22:31] 服务器启动命令已发送
+[2025-11-12 00:22:31] 
+[2025-11-12 00:22:31] > hallo-chat-server@2.1.1-alpha start
+[2025-11-12 00:22:31] > node src/index.js
+[2025-11-12 00:22:31] 
+[2025-11-12 00:22:32] 读取日志时出错: 'gbk' codec can't decode byte 0xa8 in position 20: illegal multibyte sequence
+[2025-11-12 00:22:39] 正在停止服务器...
+[2025-11-12 00:22:40] 服务器已停止
+[2025-11-12 00:22:59] 正在停止MongoDB服务...
+[2025-11-12 00:23:00] Windows服务停止MongoDB失败: 发生系统错误 5。
+
+拒绝访问。
+
+
+[2025-11-12 00:23:00] 使用sc命令停止MongoDB服务失败: [SC] OpenService 失败 5:
+
+拒绝访问。
+
+
+[2025-11-12 00:23:00] 已终止所有MongoDB进程
+[2025-11-12 00:23:02] MongoDB服务已停止
+[2025-11-12 00:23:04] 正在停止MongoDB服务...
+[2025-11-12 00:23:05] Windows服务停止MongoDB失败: 发生系统错误 5。
+
+拒绝访问。
+
+
+[2025-11-12 00:23:05] 使用sc命令停止MongoDB服务失败: [SC] OpenService 失败 5:
+
+拒绝访问。
+
+
+[2025-11-12 00:23:06] 已终止所有MongoDB进程
+[2025-11-12 00:23:08] MongoDB服务已停止
+[2025-11-12 00:23:08] 正在停止MongoDB服务...
+[2025-11-12 00:23:08] Windows服务停止MongoDB失败: 发生系统错误 5。
+
+拒绝访问。
+
+
+[2025-11-12 00:23:09] 使用sc命令停止MongoDB服务失败: [SC] OpenService 失败 5:
+
+拒绝访问。
+
+
+[2025-11-12 00:23:09] 已终止所有MongoDB进程
+[2025-11-12 00:23:11] MongoDB服务已停止
+[2025-11-12 00:26:55] HalloChat服务器管理器启动
+[2025-11-12 00:27:20] 检测到依赖未安装，正在尝试安装...
+[2025-11-12 00:27:22] 正在启动服务器...
+[2025-11-12 00:27:22] 服务器启动命令已发送
+[2025-11-12 00:27:23] 
+[2025-11-12 00:27:23] > hallo-chat-server@2.1.1-alpha start
+[2025-11-12 00:27:23] > node src/index.js
+[2025-11-12 00:27:23] 
+[2025-11-12 00:27:23] info: 服务已启动，端口：7932 {"timestamp":"2025-11-12 00:27:23"}
+[2025-11-12 00:27:23] 服务已启动，端口：7932
+[2025-11-12 00:27:23] info: MongoDB数据库连接成功 {"timestamp":"2025-11-12 00:27:23"}
+[2025-11-12 00:27:23] MongoDB数据库连接成功
+[2025-11-12 00:32:47] 正在停止服务器...
+[2025-11-12 00:32:47] 服务器已停止
+[2025-11-12 00:32:48] 正在停止MongoDB服务...
+[2025-11-12 00:32:48] Windows服务停止MongoDB失败: 发生系统错误 5。
+
+拒绝访问。
+
+
+[2025-11-12 00:32:49] 使用sc命令停止MongoDB服务失败: [SC] OpenService 失败 5:
+
+拒绝访问。
+
+
+[2025-11-12 00:32:49] 已终止所有MongoDB进程
+[2025-11-12 00:32:51] MongoDB服务已停止
+[2025-11-12 00:36:41] HalloChat服务器管理器启动
+[2025-11-12 00:36:45] 正在停止MongoDB服务...
+[2025-11-12 00:36:45] 尝试以管理员权限停止MongoDB服务...
+[2025-11-12 00:36:45] 已尝试以管理员权限停止MongoDB服务，请查看权限提示对话框
+[2025-11-12 00:36:46] 已终止所有MongoDB进程
+[2025-11-12 00:36:48] MongoDB服务已停止
+[2025-11-12 00:36:54] 正在停止MongoDB服务...
+[2025-11-12 00:36:54] 尝试以管理员权限停止MongoDB服务...
+[2025-11-12 00:36:54] 已尝试以管理员权限停止MongoDB服务，请查看权限提示对话框
+[2025-11-12 00:36:55] 已终止所有MongoDB进程
+[2025-11-12 00:36:57] MongoDB服务已停止
+[2025-11-12 00:36:57] 正在停止MongoDB服务...
+[2025-11-12 00:36:57] 尝试以管理员权限停止MongoDB服务...
+[2025-11-12 00:36:58] 已尝试以管理员权限停止MongoDB服务，请查看权限提示对话框
+[2025-11-12 00:36:58] 已终止所有MongoDB进程
+[2025-11-12 00:37:00] MongoDB服务已停止
+[2025-11-12 00:37:08] 正在停止MongoDB服务...
+[2025-11-12 00:37:08] 尝试以管理员权限停止MongoDB服务...
+[2025-11-12 00:37:08] 已尝试以管理员权限停止MongoDB服务，请查看权限提示对话框
+[2025-11-12 00:37:09] 已终止所有MongoDB进程
+[2025-11-12 00:37:11] MongoDB服务已停止
+[2025-11-12 00:41:21] HalloChat服务器管理器启动
+[2025-11-12 00:41:24] 正在启动MongoDB服务...
+[2025-11-12 00:41:24] Windows服务启动MongoDB失败: 发生系统错误 5。
+
+拒绝访问。
+
+
+[2025-11-12 00:41:24] 使用sc命令启动MongoDB服务失败: [SC] StartService: OpenService 失败 5:
+
+拒绝访问。
+
+
+[2025-11-12 00:41:24] 尝试直接启动MongoDB进程...
+[2025-11-12 00:41:24] 找到MongoDB安装: C:\Program Files\MongoDB\Server\7.0\bin\mongod.exe
+[2025-11-12 00:41:24] 创建MongoDB数据目录: C:\ProgramData\MongoDB\data\db
+[2025-11-12 00:41:25] 直接启动MongoDB成功
+[2025-11-12 00:41:33] 正在停止MongoDB服务...
+[2025-11-12 00:41:33] 尝试以管理员权限停止MongoDB服务...
+[2025-11-12 00:41:33] 已尝试以管理员权限停止MongoDB服务，请查看权限提示对话框
+[2025-11-12 00:41:34] 终止MongoDB进程PID: 59468
+[2025-11-12 00:41:34] 终止直接启动的MongoDB进程
+[2025-11-12 00:41:34] 第1次尝试终止所有MongoDB进程
+[2025-11-12 00:41:34] 已尝试终止所有MongoDB进程
+[2025-11-12 00:41:38] 第2次尝试终止所有MongoDB进程
+[2025-11-12 00:41:38] 已尝试终止所有MongoDB进程
+[2025-11-12 00:41:42] 第3次尝试终止所有MongoDB进程
+[2025-11-12 00:41:42] 已尝试终止所有MongoDB进程
+[2025-11-12 00:41:44] 等待MongoDB进程完全终止...
+[2025-11-12 00:41:48] MongoDB似乎仍在运行，等待并再次检查...(1/5)
+[2025-11-12 00:41:50] MongoDB似乎仍在运行，等待并再次检查...(2/5)
+[2025-11-12 00:41:53] MongoDB似乎仍在运行，等待并再次检查...(3/5)
+[2025-11-12 00:41:55] MongoDB似乎仍在运行，等待并再次检查...(4/5)
+[2025-11-12 00:41:57] MongoDB似乎仍在运行，等待并再次检查...(5/5)
+[2025-11-12 00:41:59] MongoDB似乎仍在运行，尝试最后一次强力终止...
+[2025-11-12 00:42:02] 警告：无法确认MongoDB是否已完全停止，请手动检查
+[2025-11-12 00:42:10] 正在停止MongoDB服务...
+[2025-11-12 00:42:10] 尝试以管理员权限停止MongoDB服务...
+[2025-11-12 00:42:10] 已尝试以管理员权限停止MongoDB服务，请查看权限提示对话框
+[2025-11-12 00:42:10] 第1次尝试终止所有MongoDB进程
+[2025-11-12 00:42:11] 已尝试终止所有MongoDB进程
+[2025-11-12 00:42:14] 第2次尝试终止所有MongoDB进程
+[2025-11-12 00:42:15] 已尝试终止所有MongoDB进程
+[2025-11-12 00:42:18] 第3次尝试终止所有MongoDB进程
+[2025-11-12 00:42:19] 已尝试终止所有MongoDB进程
+[2025-11-12 00:42:21] 等待MongoDB进程完全终止...
+[2025-11-12 00:42:24] MongoDB似乎仍在运行，等待并再次检查...(1/5)
+[2025-11-12 00:42:27] MongoDB似乎仍在运行，等待并再次检查...(2/5)
+[2025-11-12 00:42:29] MongoDB似乎仍在运行，等待并再次检查...(3/5)
+[2025-11-12 00:42:32] MongoDB似乎仍在运行，等待并再次检查...(4/5)
+[2025-11-12 00:42:35] MongoDB服务已成功停止
