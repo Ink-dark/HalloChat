@@ -4,7 +4,7 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**本仓库近期因为一些原因重建，丢失了原有所有的commit记录，仅有Gitee仓库留有完整备份。现在已经重建成功，欢迎提交。**
+**本仓库近期因为一些原因重建，丢失了原有所有的commit记录，仅有Gitee仓库留有完整备份。现在已经重建成功，欢迎大神为我们的项目进行代码贡献。**
 
 **注意：** 
 1. 本项目为测试版本，存在已知问题和功能缺失，且不定期更新，如果有发现问题请及时提交issues联系我，感谢支持。
