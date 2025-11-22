@@ -25,8 +25,8 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 - 项目仓库：[HalloChat](https://github.com/Ink-dark/HalloChat)
 - 问题反馈：[Issues](https://github.com/Ink-dark/HalloChat/issues)
 - 邮件联系：
-  1. hallochatdev@hanjiang88luntan.eu.org（项目开发团队）
-  2. d16671480856@163.com（项目开发者Ink-dark/墨染柒DarkSeven）
+  1. dev@hallochat.cn（项目开发团队）
+  2. moranqidarkseven@hallochat.cn（项目开发者Ink-dark/墨染柒DarkSeven）
   3. 企业微信：（正在配置中）
 
 ## 项目概述
@@ -290,8 +290,8 @@ JWT_REFRESH_SECRET=your_refresh_secret
 - 项目团队企业微信（要求提供手机号，用于加入项目团队）
 
 当你做好了以上准备，你可以通过以下方式联系我们：
-  1. hallochatdev@hanjiang88luntan.eu.org（项目开发团队）
-  2. d16671480856@163.com（项目开发者Ink-dark/墨染柒DarkSeven）
+  1. dev@hallochat.cn（项目开发团队）
+  2. moranqidarkseven@hallochoat.cn（项目开发者Ink-dark/墨染柒DarkSeven）
   3. 企业微信：（因企业微信限制，目前暂无法直接提供添加方式）
 
 
