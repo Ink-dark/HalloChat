@@ -29,7 +29,6 @@ const Login = ({ onLoginSuccess }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
 
   useEffect(() => {
@@ -122,10 +121,6 @@ const Login = ({ onLoginSuccess }) => {
     
     try {
       const { username, email, password } = values;
-      
-      if (password !== confirmPassword) {
-        throw new Error('两次输入的密码不一致');
-      }
       
       // 检查是否已选择服务器
       if (!selectedServer) {
