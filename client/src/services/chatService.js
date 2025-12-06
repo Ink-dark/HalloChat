@@ -54,6 +54,48 @@ class ChatService {
     return this.getMessagesFromLocal(key);
   }
 
+  // 同步未发送成功的消息
+  syncPendingMessages() {
+    try {
+      // 遍历所有本地存储的消息，查找状态为pending的消息
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(`messages_${this.currentUser.id}_`)) {
+          const messages = this.getMessagesFromLocal(key);
+          const pendingMessages = messages.filter(m => m.syncStatus === 'pending' || m.status === 'sending');
+          
+          pendingMessages.forEach(message => {
+            console.log(`重新发送消息: ${message.id}`);
+            // 更新消息状态为sending
+            message.status = 'sending';
+            this.saveMessageToLocal(message);
+            
+            // 重新发送消息到服务器
+            if (message.type === 'group' || message.groupId) {
+              this.socket.emit('message', {
+                content: message.content,
+                type: message.type,
+                receiverId: message.receiverId,
+                groupId: message.groupId,
+                channelId: message.channelId
+              });
+            } else {
+              this.socket.emit('message', {
+                content: message.content,
+                type: message.type,
+                receiverId: message.receiverId,
+                groupId: message.groupId,
+                channelId: message.channelId
+              });
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error('同步未发送消息失败:', error);
+    }
+  }
+
   // 设置服务器地址
   setServerAddress(address) {
     this.serverAddress = address;
@@ -63,7 +105,13 @@ class ChatService {
   connect(user) {
     this.currentUser = user;
     this.socket = io(this.serverAddress, {
-      query: { userId: user.id }
+      query: { userId: user.id },
+      reconnection: true,           // 启用自动重连
+      reconnectionAttempts: Infinity, // 无限次重连尝试
+      reconnectionDelay: 1000,       // 重连延迟（毫秒）
+      reconnectionDelayMax: 5000,    // 最大重连延迟（毫秒）
+      timeout: 20000,               // 连接超时时间（毫秒）
+      transports: ['websocket']      // 使用websocket传输
     });
 
     // 监听消息
@@ -104,9 +152,43 @@ class ChatService {
       this.syncHandlers.forEach(handler => handler(messageId, status));
     });
 
+    // 监听连接成功
+    this.socket.on('connect', () => {
+      console.log('WebSocket连接成功');
+      // 重新同步未发送成功的消息
+      this.syncPendingMessages();
+    });
+
+    // 监听连接断开
+    this.socket.on('disconnect', (reason) => {
+      console.log('WebSocket连接断开:', reason);
+    });
+
+    // 监听重连尝试
+    this.socket.on('reconnect_attempt', (attemptNumber) => {
+      console.log(`WebSocket重连尝试 #${attemptNumber}`);
+    });
+
+    // 监听重连成功
+    this.socket.on('reconnect', (attemptNumber) => {
+      console.log(`WebSocket重连成功，尝试次数: ${attemptNumber}`);
+      // 重新同步未发送成功的消息
+      this.syncPendingMessages();
+    });
+
+    // 监听重连失败
+    this.socket.on('reconnect_failed', () => {
+      console.error('WebSocket重连失败');
+    });
+
+    // 监听连接超时
+    this.socket.on('connect_timeout', (timeout) => {
+      console.error(`WebSocket连接超时: ${timeout}ms`);
+    });
+
     // 监听错误
     this.socket.on('error', (error) => {
-      console.error('WebSocket error:', error);
+      console.error('WebSocket错误:', error);
     });
   }
 
