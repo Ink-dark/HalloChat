@@ -16,6 +16,44 @@ class ChatService {
     this.syncHandlers = []; // 用于同步状态
   }
 
+  // 保存消息到本地存储
+  saveMessageToLocal(message) {
+    try {
+      const key = `messages_${this.currentUser.id}_${message.type === 'group' ? message.groupId : message.receiverId || message.senderId}`;
+      const messages = this.getMessagesFromLocal(key);
+      const existingMessageIndex = messages.findIndex(m => m.id === message.id);
+      
+      if (existingMessageIndex >= 0) {
+        // 更新现有消息
+        messages[existingMessageIndex] = message;
+      } else {
+        // 添加新消息
+        messages.push(message);
+      }
+      
+      localStorage.setItem(key, JSON.stringify(messages));
+    } catch (error) {
+      console.error('保存消息到本地存储失败:', error);
+    }
+  }
+
+  // 从本地存储获取消息
+  getMessagesFromLocal(key) {
+    try {
+      const messages = localStorage.getItem(key);
+      return messages ? JSON.parse(messages) : [];
+    } catch (error) {
+      console.error('从本地存储获取消息失败:', error);
+      return [];
+    }
+  }
+
+  // 获取与特定联系人/群组的聊天记录
+  getChatHistory(contactId, isGroup = false) {
+    const key = `messages_${this.currentUser.id}_${isGroup ? contactId : contactId}`;
+    return this.getMessagesFromLocal(key);
+  }
+
   // 设置服务器地址
   setServerAddress(address) {
     this.serverAddress = address;
@@ -31,6 +69,8 @@ class ChatService {
     // 监听消息
     this.socket.on('message', (messageData) => {
       const message = new Message(messageData);
+      // 保存接收的消息到本地存储
+      this.saveMessageToLocal(message);
       this.messageHandlers.forEach(handler => handler(message));
     });
 
@@ -72,7 +112,7 @@ class ChatService {
 
   // 发送消息
   sendMessage(receiverId, content, type = 'text', groupId = null, channelId = null) {
-    const message = new Message({
+    const message = new Message({ 
       id: `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`, // 临时ID
       senderId: this.currentUser.id,
       receiverId,
@@ -82,6 +122,9 @@ class ChatService {
       status: 'sending',
       syncStatus: 'pending'
     });
+    
+    // 保存消息到本地存储
+    this.saveMessageToLocal(message);
     
     // 发送消息到服务器
     this.socket.emit('message', {

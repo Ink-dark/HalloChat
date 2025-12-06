@@ -54,16 +54,19 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
         </button>
         <ContactList 
           currentUser={currentUser}
-          onContactSelect={(contact) => {
+          contacts={[
+            { id: 'user2', username: '好友1', onlineStatus: true, isStarred: false, isPinned: false, type: 'user' },
+            { id: 'user3', username: '好友2', onlineStatus: false, isStarred: true, isPinned: false, type: 'user' },
+            { id: 'user4', username: '好友3', onlineStatus: true, isStarred: false, isPinned: true, type: 'user' },
+          ]}
+          onSelectContact={(contact) => {
             setSelectedContact(contact);
             setSelectedGroup(null);
             setActiveView('chat');
           }}
-          onGroupSelect={(group) => {
-            setSelectedGroup(group);
-            setSelectedContact(null);
-            setActiveView('group-chat');
-          }}
+          onStartEncryptedChat={() => console.log('开始加密聊天')}
+          onCreateGroup={() => console.log('创建群组')}
+          onCreateChannel={() => console.log('创建频道')}
         />
       </div>
       
