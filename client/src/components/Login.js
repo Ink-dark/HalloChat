@@ -69,7 +69,7 @@ const Login = ({ onLoginSuccess }) => {
 
       const fullAddress = `${selectedServer.address}:${selectedServer.port}`;
       const serverName = selectedServer.name || selectedServer.address;
-
+      
       if (rememberMe) {
         localStorage.setItem('halloChat_username', username);
         // 使用环境变量或安全存储的密钥
@@ -233,7 +233,13 @@ const Login = ({ onLoginSuccess }) => {
           <Form.Item
             name="password"
             label="密码"
-            rules={[{ required: true, message: '请输入密码' }]}
+            rules={[
+              { required: true, message: '请输入密码' },
+              { 
+                pattern: /^(?:(?=.*[a-z])(?=.*[A-Z])(?=.*\d)|(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*()_+-])|(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+-])|(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()_+-]))[A-Za-z\d~!@#$%^&*()_+-]{6,20}$/, 
+                message: '密码必须包含大写字母、小写字母、数字、特殊符号（~!@#$%^&*()_+-）中的至少三种，长度为6-20个字符' 
+              }
+            ]}
           >
             <Input.Password value={password} onChange={(e) => setPassword(e.target.value)} />
           </Form.Item>
