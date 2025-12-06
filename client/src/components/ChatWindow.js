@@ -129,54 +129,54 @@ function ChatWindow({ currentUser, contact }) {
         });
 
         // 加载历史消息 - 将函数移到内部以避免依赖问题
-132→        const loadHistoryMessages = async () => {
-133→            try {
-134→                // 使用模拟历史消息数据
-135→                const mockHistoryMessages = [
-136→                    {
-137→                        id: 'msg1',
-138→                        senderId: contact.id,
-139→                        receiverId: currentUser.id,
-140→                        content: '你好！最近怎么样？',
-141→                        type: 'text',
-142→                        timestamp: Date.now() - 3600000,
-143→                        isRead: true,
-144→                        isDelivered: true,
-145→                        status: 'delivered',
-146→                        syncStatus: 'synced'
-147→                    },
-148→                    {
-149→                        id: 'msg2',
-150→                        senderId: currentUser.id,
-151→                        receiverId: contact.id,
-152→                        content: '我很好，谢谢！你呢？',
-153→                        type: 'text',
-154→                        timestamp: Date.now() - 3500000,
-155→                        isRead: true,
-156→                        isDelivered: true,
-157→                        status: 'delivered',
-158→                        syncStatus: 'synced'
-159→                    },
-160→                    {
-161→                        id: 'msg3',
-162→                        senderId: contact.id,
-163→                        receiverId: currentUser.id,
-164→                        content: '我也不错，最近在忙什么？',
-165→                        type: 'text',
-166→                        timestamp: Date.now() - 3400000,
-167→                        isRead: true,
-168→                        isDelivered: true,
-169→                        status: 'delivered',
-170→                        syncStatus: 'synced'
-171→                    }
-172→                ];
-173→                
-174→                // 将模拟消息添加到状态中
-175→                setMessages(mockHistoryMessages);
-176→            } catch (err) {
-177→                setError('加载历史消息失败: ' + err.message);
-178→            }
-179→        };
+        const loadHistoryMessages = async () => {
+            try {
+                // 使用模拟历史消息数据
+                const mockHistoryMessages = [
+                    {
+                        id: 'msg1',
+                        senderId: contact.id,
+                        receiverId: currentUser.id,
+                        content: '你好！最近怎么样？',
+                        type: 'text',
+                        timestamp: Date.now() - 3600000,
+                        isRead: true,
+                        isDelivered: true,
+                        status: 'delivered',
+                        syncStatus: 'synced'
+                    },
+                    {
+                        id: 'msg2',
+                        senderId: currentUser.id,
+                        receiverId: contact.id,
+                        content: '我很好，谢谢！你呢？',
+                        type: 'text',
+                        timestamp: Date.now() - 3500000,
+                        isRead: true,
+                        isDelivered: true,
+                        status: 'delivered',
+                        syncStatus: 'synced'
+                    },
+                    {
+                        id: 'msg3',
+                        senderId: contact.id,
+                        receiverId: currentUser.id,
+                        content: '我也不错，最近在忙什么？',
+                        type: 'text',
+                        timestamp: Date.now() - 3400000,
+                        isRead: true,
+                        isDelivered: true,
+                        status: 'delivered',
+                        syncStatus: 'synced'
+                    }
+                ];
+                
+                // 将模拟消息添加到状态中
+                setMessages(mockHistoryMessages);
+            } catch (err) {
+                setError('加载历史消息失败: ' + err.message);
+            }
+        };
         
         loadHistoryMessages();
 
