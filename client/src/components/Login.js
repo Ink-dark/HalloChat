@@ -56,18 +56,12 @@ const Login = ({ onLoginSuccess }) => {
     loadLastUsedServer();
   }, [selectedServer]);
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (values) => {
     setIsLoading(true);
     setError('');
     
     try {
-      const usernameRegex = /^[\u4e00-\u9fa5a-zA-Z0-9_]{3,20}$/;
-      if (!username || !password) {
-        throw new Error('请输入用户名和密码');
-      }
-      if (!usernameRegex.test(username)) {
-        throw new Error('用户名只能包含中文、字母、数字、下划线，长度3-20位');
-      }
+      const { username, password } = values;
 
       // 检查是否已选择服务器
       if (!selectedServer) {
@@ -122,14 +116,12 @@ const Login = ({ onLoginSuccess }) => {
     }
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (values) => {
     setIsLoading(true);
     setError('');
     
     try {
-      if (!username || !password || !email) {
-        throw new Error('请填写所有必填字段');
-      }
+      const { username, email, password } = values;
       
       if (password !== confirmPassword) {
         throw new Error('两次输入的密码不一致');
@@ -156,11 +148,10 @@ const Login = ({ onLoginSuccess }) => {
       
       onLoginSuccess(user);
     } catch (err) {
-      const errorCode = err.response?.data?.code;
-        const errorMsg = errorCode
-          ? `错误码 ${errorCode}：${err.response.data.message}`
-          : (err.message || '注册失败');
-        setError(errorMsg);
+      const errorMsg = err.response?.data?.message 
+        || err.message 
+        || '注册失败';
+      setError(errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -254,9 +245,20 @@ const Login = ({ onLoginSuccess }) => {
           <Form.Item
             name="confirmPassword"
             label="确认密码"
-            rules={[{ required: true, message: '请确认密码' }]}
+            dependencies={['password']}
+            rules={[
+              { required: true, message: '请确认密码' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('两次输入的密码不一致'));
+                },
+              }),
+            ]}
           >
-            <Input.Password value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <Input.Password />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block loading={isLoading}>

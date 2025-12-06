@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Layout } from 'antd';
+
 import MainWindow from './components/MainWindow';
 import Login from './components/Login';
 import './App.css';
@@ -99,7 +99,7 @@ function App() {
 
   return (
     <Router>
-      <Layout className="app-layout">
+      <div className="app-layout">
         {activeView === 'main' && isAuthenticated && currentUser ? (
           <MainWindow 
             currentUser={currentUser} 
@@ -108,7 +108,7 @@ function App() {
         ) : (
           <Login onLoginSuccess={handleLoginSuccess} />
         )}
-      </Layout>
+      </div>
     </Router>
   );
 }

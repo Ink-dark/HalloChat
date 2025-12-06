@@ -435,10 +435,12 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
       ]}
       width="80%"
       style={{ maxWidth: '1200px', minWidth: '600px' }}
-      bodyStyle={{ 
-        maxHeight: '70vh',
-        overflow: 'auto',
-        padding: '16px 24px'
+      styles={{ 
+        body: {
+          maxHeight: '70vh',
+          overflow: 'auto',
+          padding: '16px 24px'
+        }
       }}
     >
       {error && <Alert message="错误提示" description={error} type="error" showIcon style={{ marginBottom: 16 }} />}
