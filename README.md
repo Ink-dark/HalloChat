@@ -4,7 +4,7 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**本仓库近期因为一些原因重建，丢失了原有所有的commit记录，仅有Gitee仓库留有完整备份。现在已经重建成功，欢迎提交。**
+**本仓库近期因为一些原因重建，丢失了原有所有的commit记录，仅有Gitee仓库留有完整备份。现在已经重建成功，欢迎大神为我们的项目进行代码贡献。**
 
 **注意：** 
 1. 本项目为测试版本，存在已知问题和功能缺失，且不定期更新，如果有发现问题请及时提交issues联系我，感谢支持。
@@ -25,8 +25,8 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 - 项目仓库：[HalloChat](https://github.com/Ink-dark/HalloChat)
 - 问题反馈：[Issues](https://github.com/Ink-dark/HalloChat/issues)
 - 邮件联系：
-  1. hallochatdev@hanjiang88luntan.eu.org（项目开发团队）
-  2. d16671480856@163.com（项目开发者Ink-dark/墨染柒DarkSeven）
+  1. dev@hallochat.cn（项目开发团队）
+  2. moranqidarkseven@hallochat.cn（项目开发者Ink-dark/墨染柒DarkSeven）
   3. 企业微信：（正在配置中）
 
 ## 项目概述
@@ -290,8 +290,8 @@ JWT_REFRESH_SECRET=your_refresh_secret
 - 项目团队企业微信（要求提供手机号，用于加入项目团队）
 
 当你做好了以上准备，你可以通过以下方式联系我们：
-  1. hallochatdev@hanjiang88luntan.eu.org（项目开发团队）
-  2. d16671480856@163.com（项目开发者Ink-dark/墨染柒DarkSeven）
+  1. dev@hallochat.cn（项目开发团队）
+  2. moranqidarkseven@hallochoat.cn（项目开发者Ink-dark/墨染柒DarkSeven）
   3. 企业微信：（因企业微信限制，目前暂无法直接提供添加方式）
 
 

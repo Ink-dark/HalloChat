@@ -1,5 +1,6 @@
 # HalloChat server management console required Python libraries
-# Note: This project only uses Python standard libraries, no additional third-party libraries needed
+# Third-party dependencies:
+requests>=2.25.0
 
 # Used standard libraries:
 # - os: Operating system interface
