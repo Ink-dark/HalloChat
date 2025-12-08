@@ -6,6 +6,7 @@ import encryptedChatService from '../services/encryptedChatService';
 import ServerSelectionWindow from './ServerSelectionWindow';
 import './Login.css';
 import { Form, Input, Button, Checkbox, Alert, message } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined, CloudServerOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState(localStorage.getItem('halloChat_username') || '');
@@ -165,150 +166,205 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="login-container">
-      <h2>欢迎使用HalloChat</h2>
-      {error && <Alert message="错误提示" description={error} type="error" showIcon style={{ marginBottom: 16 }} />}
-      
-      {/* 服务器选择区域 */}
-      <div style={{ marginBottom: 20 }}>
-        <h3 style={{ marginBottom: 10 }}>服务器</h3>
-        
-        {/* 当前选择的服务器 */}
-        {selectedServer ? (
-          <div style={{ 
-            padding: '10px', 
-            border: '1px solid #e8e8e8', 
-            borderRadius: '4px',
-            marginBottom: '10px',
-            backgroundColor: '#f9f9f9'
-          }}>
-            <div style={{ marginBottom: '6px' }}>
-              <strong>服务器名称: </strong> 
-              <span style={{ fontFamily: 'monospace' }}>{selectedServer.name}</span>
-            </div>
-            <div>
-              <strong>服务器地址: </strong> 
-              <span style={{ fontFamily: 'monospace' }}>{selectedServer.address}:{selectedServer.port}</span>
-            </div>
+    <div className="login-wrapper">
+      <div className="login-container">
+        {/* Logo 和标题区域 */}
+        <div className="login-header">
+          <div className="login-logo">
+            <img src="/HalloChat.ico" alt="HalloChat Logo" className="login-logo-img" />
           </div>
-        ) : (
-          <div style={{ 
-            textAlign: 'center', 
-            marginBottom: '10px', 
-            color: '#999',
-            padding: '10px',
-            border: '1px dashed #e8e8e8',
-            borderRadius: '4px'
-          }}>
-            未选择服务器
-          </div>
-        )}
+          <h2>欢迎使用 HalloChat</h2>
+          <p className="login-subtitle">安全、快速、可靠的即时通讯平台</p>
+        </div>
+
+        {error && <Alert message="错误提示" description={error} type="error" showIcon closable />}
         
-        {/* 选择服务器按钮 */}
-        <div style={{ textAlign: 'center' }}>
-          <Button type="primary" onClick={openServerSelection}>
+        {/* 服务器选择区域 */}
+        <div className="server-section">
+          <div className="server-section-title">
+            <CloudServerOutlined />
+            服务器配置
+          </div>
+          
+          {/* 当前选择的服务器 */}
+          {selectedServer ? (
+            <div className="server-info-card">
+              <div className="server-info-item">
+                <CheckCircleOutlined style={{ color: '#667eea' }} />
+                <span className="server-info-label">服务器名称:</span>
+                <span className="server-info-value">{selectedServer.name}</span>
+              </div>
+              <div className="server-info-item">
+                <CloudServerOutlined style={{ color: '#667eea' }} />
+                <span className="server-info-label">服务器地址:</span>
+                <span className="server-info-value">{selectedServer.address}:{selectedServer.port}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="server-placeholder">
+              未选择服务器，请先选择服务器
+            </div>
+          )}
+          
+          {/* 选择服务器按钮 */}
+          <Button 
+            type="primary" 
+            onClick={openServerSelection}
+            icon={<CloudServerOutlined />}
+            className="server-select-btn"
+          >
             {selectedServer ? '更换服务器' : '选择服务器'}
           </Button>
         </div>
+        
+        {/* 登录/注册表单 */}
+        {isRegistering ? (
+          <Form onFinish={handleRegister} layout="vertical" className="login-form">
+            <Form.Item
+              name="email"
+              label="邮箱"
+              rules={[{ required: true, type: 'email', message: '请输入有效的邮箱地址' }]}
+            >
+              <Input 
+                prefix={<MailOutlined style={{ color: '#a0aec0' }} />}
+                placeholder="请输入您的邮箱"
+                size="large"
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+              />
+            </Form.Item>
+            <Form.Item
+              name="username"
+              label="用户名"
+              rules={[
+                { required: true, message: '请输入用户名' },
+                { pattern: /^[一-龥a-zA-Z0-9_]{3,20}$/, message: '用户名只能包含中文、字母、数字、下划线，长度3-20位' }
+              ]}
+            >
+              <Input 
+                prefix={<UserOutlined style={{ color: '#a0aec0' }} />}
+                placeholder="请输入用户名"
+                size="large"
+                value={username} 
+                onChange={(e) => setUsername(e.target.value)} 
+              />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              label="密码"
+              rules={[
+                { required: true, message: '请输入密码' },
+                { 
+                  pattern: /^(?:(?=.*[a-z])(?=.*[A-Z])(?=.*\d)|(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*()_+-])|(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+-])|(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()_+-]))[A-Za-z\d~!@#$%^&*()_+-]{6,20}$/, 
+                  message: '密码必须包含大写字母、小写字母、数字、特殊符号中的至少三种，长度为6-20个字符' 
+                }
+              ]}
+            >
+              <Input.Password 
+                prefix={<LockOutlined style={{ color: '#a0aec0' }} />}
+                placeholder="请输入密码"
+                size="large"
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+              />
+            </Form.Item>
+            <Form.Item
+              name="confirmPassword"
+              label="确认密码"
+              dependencies={['password']}
+              rules={[
+                { required: true, message: '请确认密码' },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('两次输入的密码不一致'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password 
+                prefix={<LockOutlined style={{ color: '#a0aec0' }} />}
+                placeholder="请再次输入密码"
+                size="large"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                block 
+                loading={isLoading}
+                className="login-submit-btn"
+              >
+                立即注册
+              </Button>
+            </Form.Item>
+            <div className="toggle-form-link">
+              已有账号？<Button type="link" onClick={() => setIsRegistering(false)}>立即登录</Button>
+            </div>
+          </Form>
+        ) : (
+          <Form onFinish={handleLogin} layout="vertical" className="login-form">
+            <Form.Item
+              name="username"
+              label="用户名"
+              rules={[
+                { required: true, message: '请输入用户名' },
+                { pattern: /^[一-龥a-zA-Z0-9_]{3,20}$/, message: '用户名只能包含中文、字母、数字、下划线，长度3-20位' }
+              ]}
+            >
+              <Input 
+                prefix={<UserOutlined style={{ color: '#a0aec0' }} />}
+                placeholder="请输入用户名"
+                size="large"
+                value={username} 
+                onChange={(e) => setUsername(e.target.value)} 
+              />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              label="密码"
+              rules={[{ required: true, message: '请输入密码' }]}
+            >
+              <Input.Password 
+                prefix={<LockOutlined style={{ color: '#a0aec0' }} />}
+                placeholder="请输入密码"
+                size="large"
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+              />
+            </Form.Item>
+            <Form.Item>
+              <Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}>
+                记住我
+              </Checkbox>
+            </Form.Item>
+            <Form.Item>
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                block 
+                loading={isLoading}
+                className="login-submit-btn"
+              >
+                立即登录
+              </Button>
+            </Form.Item>
+            <div className="toggle-form-link">
+              没有账号？<Button type="link" onClick={() => setIsRegistering(true)}>去注册</Button>
+            </div>
+          </Form>
+        )}
+        
+        {/* 服务器选择窗口 */}
+        <ServerSelectionWindow
+          visible={showServerSelection}
+          onClose={() => setShowServerSelection(false)}
+          onServerSelected={handleServerSelected}
+        />
       </div>
-      
-      {/* 登录/注册表单 */}
-      {isRegistering ? (
-        <Form onFinish={handleRegister} layout="vertical">
-          <Form.Item
-            name="email"
-            label="邮箱"
-            rules={[{ required: true, type: 'email', message: '请输入有效的邮箱地址' }]}
-          >
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} />
-          </Form.Item>
-          <Form.Item
-            name="username"
-            label="用户名"
-            rules={[{ required: true, message: '请输入用户名' },
-              { pattern: /^[一-龥a-zA-Z0-9_]{3,20}$/, message: '用户名只能包含中文、字母、数字、下划线，长度3-20位' }]}
-          >
-            <Input value={username} onChange={(e) => setUsername(e.target.value)} />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            label="密码"
-            rules={[
-              { required: true, message: '请输入密码' },
-              { 
-                pattern: /^(?:(?=.*[a-z])(?=.*[A-Z])(?=.*\d)|(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*()_+-])|(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+-])|(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()_+-]))[A-Za-z\d~!@#$%^&*()_+-]{6,20}$/, 
-                message: '密码必须包含大写字母、小写字母、数字、特殊符号（~!@#$%^&*()_+-）中的至少三种，长度为6-20个字符' 
-              }
-            ]}
-          >
-            <Input.Password value={password} onChange={(e) => setPassword(e.target.value)} />
-          </Form.Item>
-          <Form.Item
-            name="confirmPassword"
-            label="确认密码"
-            dependencies={['password']}
-            rules={[
-              { required: true, message: '请确认密码' },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error('两次输入的密码不一致'));
-                },
-              }),
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block loading={isLoading}>
-              注册
-            </Button>
-          </Form.Item>
-          <div style={{ textAlign: 'center', marginTop: 16 }}>
-            已有账号？<Button type="link" onClick={() => setIsRegistering(false)}>立即登录</Button>
-          </div>
-        </Form>
-      ) : (
-        <Form onFinish={handleLogin} layout="vertical">
-          <Form.Item
-            name="username"
-            label="用户名"
-            rules={[{ required: true, message: '请输入用户名' },
-              { pattern: /^[一-龥a-zA-Z0-9_]{3,20}$/, message: '用户名只能包含中文、字母、数字、下划线，长度3-20位' }]}
-          >
-            <Input value={username} onChange={(e) => setUsername(e.target.value)} />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            label="密码"
-            rules={[{ required: true, message: '请输入密码' }]}
-          >
-            <Input.Password value={password} onChange={(e) => setPassword(e.target.value)} />
-          </Form.Item>
-          <Form.Item>
-            <Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}>
-              记住我
-            </Checkbox>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block loading={isLoading}>
-              登录
-            </Button>
-          </Form.Item>
-          <div style={{ textAlign: 'center', marginTop: 16 }}>
-            没有账号？<Button type="link" onClick={() => setIsRegistering(true)}>去注册</Button>
-          </div>
-        </Form>
-      )}
-      
-      {/* 服务器选择窗口 */}
-      <ServerSelectionWindow
-        visible={showServerSelection}
-        onClose={() => setShowServerSelection(false)}
-        onServerSelected={handleServerSelected}
-      />
     </div>
   );
 };

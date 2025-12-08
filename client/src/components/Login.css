@@ -1,82 +1,339 @@
+/* 登录页面外层容器 - 全屏渐变背景 */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 背景动画装饰 */
+.login-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: float 20s ease-in-out infinite;
+}
+
+.login-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: -50%;
+  left: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+  animation: float 25s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(50px, 50px);
+  }
+}
+
+/* 登录卡片容器 - 毛玻璃效果 */
 .login-container {
   max-width: 480px;
-  min-width: 450px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  width: 100%;
+  padding: 2.5rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+              0 0 0 1px rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo 和标题区域 */
+.login-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.login-logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  animation: logoFloat 3s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.login-logo-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .login-container h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
+  color: #2d3748;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.error-message {
-  color: #e74c3c;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  background-color: #fdecea;
-  border-radius: 4px;
-}
-
-button[type="submit"] {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4285f4;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button[type="submit"]:hover {
-  background-color: #3367d6;
-}
-
-button[type="submit"]:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-.toggle-form {
-  margin-top: 1rem;
+.login-subtitle {
   text-align: center;
+  color: #718096;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
 }
 
-.toggle-form button {
-  background: none;
+/* 服务器选择区域 */
+.server-section {
+  margin-bottom: 1.8rem;
+}
+
+.server-section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.server-info-card {
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  transition: all 0.3s ease;
+}
+
+.server-info-card:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.server-info-item {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.server-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.server-info-label {
+  font-weight: 600;
+  color: #4a5568;
+  min-width: 85px;
+}
+
+.server-info-value {
+  font-family: 'Monaco', 'Menlo', monospace;
+  color: #667eea;
+  font-weight: 500;
+  flex: 1;
+}
+
+.server-placeholder {
+  text-align: center;
+  padding: 1.2rem;
+  color: #a0aec0;
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: #f7fafc;
+}
+
+.server-select-btn {
+  width: 100%;
+  height: 42px;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.server-select-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* 表单样式优化 */
+.login-form .ant-form-item-label > label {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.login-form .ant-input,
+.login-form .ant-input-password {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.login-form .ant-input:hover,
+.login-form .ant-input-password:hover {
+  border-color: #cbd5e0;
+}
+
+.login-form .ant-input:focus,
+.login-form .ant-input-password:focus,
+.login-form .ant-input-focused,
+.login-form .ant-input-password-focused {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 记住我复选框 */
+.login-form .ant-checkbox-wrapper {
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.login-form .ant-checkbox-checked .ant-checkbox-inner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+}
+
+/* 提交按钮 */
+.login-submit-btn {
+  height: 48px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  color: #4285f4;
-  cursor: pointer;
-  padding: 0;
-  font-size: inherit;
-  text-decoration: underline;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
 }
 
-.toggle-form button:hover {
-  color: #3367d6;
-  text-decoration: none;
+.login-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46a0 100%);
+}
+
+.login-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* 切换表单链接 */
+.toggle-form-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #718096;
+  font-size: 0.95rem;
+}
+
+.toggle-form-link .ant-btn-link {
+  color: #667eea;
+  font-weight: 600;
+  padding: 0 4px;
+  transition: all 0.3s ease;
+}
+
+.toggle-form-link .ant-btn-link:hover {
+  color: #764ba2;
+  transform: scale(1.05);
+}
+
+/* 错误提示优化 */
+.login-form .ant-alert {
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border: none;
+}
+
+.login-form .ant-alert-error {
+  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+}
+
+/* 响应式设计 */
+@media (max-width: 576px) {
+  .login-container {
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+  }
+  
+  .login-logo {
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+  }
+  
+  .login-container h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* 加载状态 */
+.login-form .ant-btn-loading {
+  opacity: 0.8;
+}
+
+/* 表单动画 */
+.login-form .ant-form-item {
+  animation: fadeInUp 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+.login-form .ant-form-item:nth-child(1) { animation-delay: 0.1s; }
+.login-form .ant-form-item:nth-child(2) { animation-delay: 0.2s; }
+.login-form .ant-form-item:nth-child(3) { animation-delay: 0.3s; }
+.login-form .ant-form-item:nth-child(4) { animation-delay: 0.4s; }
+.login-form .ant-form-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

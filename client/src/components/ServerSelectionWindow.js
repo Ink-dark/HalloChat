@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Button, Form, Input, Modal, Table, Tag, message, Alert } from 'antd';
 import { 
   CheckOutlined, 
@@ -29,7 +29,8 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
   useEffect(() => {
     if (visible) {
       loadSavedServers();
-      discoverLocalServers();
+      // 移除局域网发现，因为它可能导致卡顿
+      // discoverLocalServers();
     }
   }, [visible]);
 
@@ -241,12 +242,13 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
     }
   };
 
-  const handleServerSelect = (server) => {
+  // 处理服务器选择 - 使用 useCallback 优化
+  const handleServerSelect = useCallback((server) => {
     setSelectedServer(server);
-  };
+  }, []);
 
-  // 确认选择服务器
-  const handleConfirmSelection = () => {
+  // 确认选择服务器 - 使用 useCallback 优化
+  const handleConfirmSelection = useCallback(() => {
     if (!selectedServer) {
       message.error('请先选择一个服务器');
       return;
@@ -257,10 +259,10 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
     }
     
     onClose();
-  };
+  }, [selectedServer, onServerSelected, onClose]);
 
-  // 服务器表格列定义
-  const serverColumns = [
+  // 服务器表格列定义 - 使用 useMemo 优化
+  const serverColumns = useMemo(() => [
     {
       title: '服务器名称',
       dataIndex: 'name',
@@ -399,13 +401,13 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
         </div>
       ),
     },
-  ];
+  ], [selectedServer, serverStatuses, handleServerSelect]);
 
-  // 合并局域网服务器和已保存服务器
-  const combinedServers = [
+  // 合并局域网服务器和已保存服务器 - 使用 useMemo 优化
+  const combinedServers = useMemo(() => [
     ...foundServers.map(server => ({ ...server, isLocal: true, key: `local-${server.address}` })),
     ...servers.map(server => ({ ...server, isLocal: false, key: `saved-${server.id}` }))
-  ];
+  ], [foundServers, servers]);
 
   return (
     <Modal
@@ -442,6 +444,9 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
           padding: '16px 24px'
         }
       }}
+      destroyOnClose={false}
+      maskClosable={true}
+      keyboard={true}
     >
       {error && <Alert message="错误提示" description={error} type="error" showIcon style={{ marginBottom: 16 }} />}
       
@@ -451,7 +456,7 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
           columns={serverColumns}
           dataSource={combinedServers}
           pagination={{
-            pageSize: 5,
+            pageSize: 10,
             showSizeChanger: true,
             pageSizeOptions: ['5', '10', '20'],
             showTotal: (total) => `共 ${total} 个服务器`
@@ -467,6 +472,8 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
             }
           })}
           scroll={{ x: 'max-content', y: 'calc(60vh - 120px)' }}
+          size="middle"
+          loading={false}
         />
       ) : (
         <div style={{ textAlign: 'center', marginBottom: 20, color: '#999' }}>
@@ -527,4 +534,4 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
   );
 };
 
-export default ServerSelectionWindow;
+export default React.memo(ServerSelectionWindow);
