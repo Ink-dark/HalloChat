@@ -22,8 +22,9 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 // 遵循 MIT 开源许可证
 ```
 ## 项目开发者
-### 墨染染
+### 墨染柒DarkSeven
 - 邮箱：moranqidarkseven@hallochat.cn
+- 个人博客：[墨染柒的个人博客](Ink-dark.github.io)
 
 ### SANYOU （LUCA.NEX)
 - 邮箱：you.san1@icloud.com
