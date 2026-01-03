@@ -21,6 +21,14 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 // 版权所有 © 2025 Ink-dark（墨染柒DarkSeven）
 // 遵循 MIT 开源许可证
 ```
+## 项目开发者
+### 墨染染
+- 邮箱：moranqidarkseven@hallochat.cn
+
+### SANYOU （LUCA.NEX)
+- 邮箱：you.san1@icloud.com
+- 个人网站:lucanex.top
+
 ## 联系我们
 - 项目仓库：[HalloChat](https://github.com/Ink-dark/HalloChat)
 - 问题反馈：[Issues](https://github.com/Ink-dark/HalloChat/issues)
