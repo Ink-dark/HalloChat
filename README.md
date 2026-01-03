@@ -27,7 +27,7 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 
 ### SANYOU （LUCA.NEX)
 - 邮箱：you.san1@icloud.com
-- 个人网站:lucanex.top
+- 个人网站:[lucanex.top](https://www.lucanex.top/)
 
 ## 联系我们
 - 项目仓库：[HalloChat](https://github.com/Ink-dark/HalloChat)
