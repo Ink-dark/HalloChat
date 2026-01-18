@@ -30,7 +30,10 @@
     "errorTitle": "錯誤提示",
     "adminMode": "管理員模式",
     "adminModeSuccess": "管理員模式登錄成功",
-    "adminCodeError": "管理員代碼錯誤"
+    "adminCodeError": "管理員代碼錯誤",
+    "selectBgColor": "選擇背景顏色",
+    "bgColorChanged": "背景顏色已更改",
+    "languageSetting": "語言設置"
   },
   "settings": {
     "title": "設置",

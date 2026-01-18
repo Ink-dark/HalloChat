@@ -30,7 +30,10 @@
     "errorTitle": "Error",
     "adminMode": "Admin Mode",
     "adminModeSuccess": "Admin mode login successful",
-    "adminCodeError": "Admin code is incorrect"
+    "adminCodeError": "Admin code is incorrect",
+    "selectBgColor": "Select Background Color",
+    "bgColorChanged": "Background color changed",
+    "languageSetting": "Language Setting"
   },
   "settings": {
     "title": "Settings",

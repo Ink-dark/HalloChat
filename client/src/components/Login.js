@@ -6,8 +6,8 @@ import chatService from '../services/chatService';
 import encryptedChatService from '../services/encryptedChatService';
 import ServerSelectionWindow from './ServerSelectionWindow';
 import './Login.css';
-import { Form, Input, Button, Checkbox, Alert, message, Select } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined, CloudServerOutlined, CheckCircleOutlined, GlobalOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Checkbox, Alert, message, Select, Popover, Divider } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined, CloudServerOutlined, CheckCircleOutlined, SettingOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -38,6 +38,23 @@ const Login = ({ onLoginSuccess }) => {
   
   // 管理员模式状态
   const [adminMode, setAdminMode] = useState(false);
+  
+  // 背景颜色设置
+  const [bgColor, setBgColor] = useState(localStorage.getItem('halloChat_login_bg') || '#ffffff');
+  
+  // 预设颜色
+  const presetColors = [
+    { color: '#ffffff', label: '白色' },
+    { color: '#f0f4ff', label: '浅蓝色' },
+    { color: '#fff0f6', label: '浅粉色' },
+    { color: '#f6ffed', label: '浅绿色' },
+    { color: '#fffbe6', label: '浅黄色' },
+    { color: '#f5f5f5', label: '浅灰色' },
+    { color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', label: '紫色渐变' },
+    { color: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', label: '粉色渐变' },
+    { color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', label: '蓝色渐变' },
+    { color: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', label: '绿色渐变' },
+  ];
 
   useEffect(() => {
     // 从localStorage加载上次使用的服务器信息
@@ -62,6 +79,21 @@ const Login = ({ onLoginSuccess }) => {
 
     loadLastUsedServer();
   }, [selectedServer]);
+  
+  // 应用背景颜色
+  useEffect(() => {
+    const wrapper = document.querySelector('.login-wrapper');
+    if (wrapper) {
+      wrapper.style.background = bgColor;
+    }
+  }, [bgColor]);
+  
+  // 切换背景颜色
+  const handleBgColorChange = (color) => {
+    setBgColor(color);
+    localStorage.setItem('halloChat_login_bg', color);
+    message.success(t('login.bgColorChanged'));
+  };
 
   const handleLogin = async (values) => {
     setIsLoading(true);
@@ -206,21 +238,89 @@ const Login = ({ onLoginSuccess }) => {
   return (
     <div className="login-wrapper">
       <div className="login-container">
-        {/* 语言切换按钮 */}
+        {/* 设置按钮 */}
         <div className="language-selector">
-          <Select
-            value={i18n.language}
-            onChange={handleLanguageChange}
-            suffixIcon={<GlobalOutlined />}
-            bordered={false}
-            dropdownMatchSelectWidth={false}
-            className="language-select"
+          <Popover
+            content={
+              <div style={{ width: '320px' }}>
+                {/* 语言设置 */}
+                <div style={{ marginBottom: '16px' }}>
+                  <div style={{ marginBottom: '12px', fontWeight: 600, color: '#4a5568', fontSize: '0.95rem' }}>
+                    🌐 {t('login.languageSetting')}
+                  </div>
+                  <Select
+                    value={i18n.language}
+                    onChange={handleLanguageChange}
+                    style={{ width: '100%' }}
+                    size="large"
+                  >
+                    <Option value="zh-CN">🇨🇳 简体中文</Option>
+                    <Option value="zh-TW">🇭🇰 繁體中文</Option>
+                    <Option value="en-US">🇬🇧 English</Option>
+                    <Option value="ru-RU">🇷🇺 Русский</Option>
+                  </Select>
+                </div>
+                
+                <Divider style={{ margin: '16px 0' }} />
+                
+                {/* 背景颜色设置 */}
+                <div>
+                  <div style={{ marginBottom: '12px', fontWeight: 600, color: '#4a5568', fontSize: '0.95rem' }}>
+                    🎨 {t('login.selectBgColor')}
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                    {presetColors.map((preset, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleBgColorChange(preset.color)}
+                        style={{
+                          height: '60px',
+                          borderRadius: '8px',
+                          background: preset.color,
+                          cursor: 'pointer',
+                          border: bgColor === preset.color ? '3px solid #667eea' : '2px solid #e2e8f0',
+                          display: 'flex',
+                          alignItems: 'flex-end',
+                          justifyContent: 'center',
+                          padding: '8px',
+                          transition: 'all 0.3s ease',
+                          boxShadow: bgColor === preset.color ? '0 4px 12px rgba(102, 126, 234, 0.3)' : 'none'
+                        }}
+                      >
+                        <span style={{
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          color: preset.color.includes('gradient') ? '#fff' : '#4a5568',
+                          textShadow: preset.color.includes('gradient') ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
+                        }}>
+                          {preset.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            }
+            trigger="click"
+            placement="bottomRight"
           >
-            <Option value="zh-CN">🇨🇳 简体中文</Option>
-            <Option value="zh-TW">🇭🇰 繁體中文</Option>
-            <Option value="en-US">🇬🇧 English</Option>
-            <Option value="ru-RU">🇷🇺 Русский</Option>
-          </Select>
+            <Button
+              icon={<SettingOutlined />}
+              style={{
+                borderRadius: '10px',
+                border: '1px solid rgba(102, 126, 234, 0.2)',
+                background: 'rgba(255, 255, 255, 0.9)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '40px',
+                width: '40px',
+                fontSize: '18px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+                transition: 'all 0.3s ease'
+              }}
+            />
+          </Popover>
         </div>
         
         {/* Logo 和标题区域 */}

@@ -30,7 +30,10 @@
     "errorTitle": "Ошибка",
     "adminMode": "Режим администратора",
     "adminModeSuccess": "Вход в режиме администратора выполнен успешно",
-    "adminCodeError": "Неверный код администратора"
+    "adminCodeError": "Неверный код администратора",
+    "selectBgColor": "Выберите цвет фона",
+    "bgColorChanged": "Цвет фона изменен",
+    "languageSetting": "Настройка языка"
   },
   "settings": {
     "title": "Настройки",
