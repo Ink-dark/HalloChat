@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import ContactList from './ContactList';
 import ChatWindow from './ChatWindow';
 import GroupChatWindow from './GroupChatWindow';
@@ -8,6 +9,7 @@ import Notification from './Notification';
 import './MainWindow.css';
 
 const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
+  const { t } = useTranslation();
   const [activeView, setActiveView] = useState('contacts');
   const [selectedContact, setSelectedContact] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -50,7 +52,7 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
           className="settings-btn"
           onClick={() => setShowSettings(!showSettings)}
         >
-          设置
+          {t('main.settings')}
         </button>
         <ContactList 
           currentUser={currentUser}
@@ -73,15 +75,15 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
       <div className="content-area">
         {!currentUser && (
           <div className="login-required-view">
-            <h2>请先登录</h2>
-            <p>正在重定向到登录界面...</p>
+            <h2>{t('main.pleaseLogin')}</h2>
+            <p>{t('main.redirectingToLogin')}</p>
           </div>
         )}
         
         {currentUser && activeView === 'contacts' && (
           <div className="welcome-view">
-            <h2>欢迎回来，{currentUser.username}</h2>
-            <p>请从左侧选择联系人开始聊天</p>
+            <h2>{t('main.welcomeBack')}，{currentUser.username}</h2>
+            <p>{t('main.selectContactToChat')}</p>
           </div>
         )}
         

@@ -57,6 +57,86 @@
   animation: slideIn 0.5s ease-out;
 }
 
+/* 语言选择器 */
+.language-selector {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.language-select {
+  min-width: 140px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.language-select .ant-select-selector {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  border-radius: 10px !important;
+  padding: 4px 12px !important;
+  height: auto !important;
+  transition: all 0.3s ease;
+}
+
+.language-select:hover .ant-select-selector {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: rgba(102, 126, 234, 0.5) !important;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.language-select .ant-select-selection-item {
+  padding-right: 20px !important;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.language-select .ant-select-arrow {
+  color: #667eea;
+}
+
+/* 语言下拉菜单样式 */
+.ant-select-dropdown {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  overflow: hidden;
+}
+
+.ant-select-item {
+  padding: 10px 16px !important;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.ant-select-item-option-selected {
+  background-color: rgba(102, 126, 234, 0.1) !important;
+  color: #667eea !important;
+  font-weight: 600;
+}
+
+.ant-select-item-option-active {
+  background-color: rgba(102, 126, 234, 0.05) !important;
+}
+
+/* 移动端响应式 */
+@media (max-width: 640px) {
+  .language-selector {
+    top: 15px;
+    right: 15px;
+  }
+  
+  .language-select {
+    min-width: 120px;
+    font-size: 0.85rem;
+  }
+  
+  .language-select .ant-select-selector {
+    padding: 2px 8px !important;
+  }
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;

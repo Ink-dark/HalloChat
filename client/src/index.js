@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import './index.css';
+import './i18n/config'; // 导入 i18n 配置
 
 // 客户端应用入口文件
 console.log('HalloChat 客户端启动中...');

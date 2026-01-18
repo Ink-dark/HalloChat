@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './Settings.css';
 
 /**
@@ -6,6 +7,7 @@ import './Settings.css';
  * 在多窗口架构中，设置的更改会通过props传递到主应用
  */
 const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
+  const { t, i18n } = useTranslation();
   const [settings, setSettings] = useState({
     sidebarStyle: 'default',
     chatListStarred: false,
@@ -68,27 +70,48 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
     }
   };
 
+  /**
+   * 处理语言变更
+   */
+  const handleLanguageChange = (language) => {
+    i18n.changeLanguage(language);
+  };
+
   return (
     <div className="settings-container">
-      <h2>设置</h2>
-      {currentUser && <p className="current-user-info">当前用户: {currentUser.username}</p>}
+      <h2>{t('settings.title')}</h2>
+      {currentUser && <p className="current-user-info">{t('settings.currentUser')}: {currentUser.username}</p>}
+      
       <div className="settings-section">
-        <h3>消息通知</h3>
+        <h3>{t('settings.languageSelection')}</h3>
+        <select 
+          value={i18n.language} 
+          onChange={(e) => handleLanguageChange(e.target.value)}
+        >
+          <option value="zh-CN">简体中文</option>
+          <option value="zh-TW">繁體中文</option>
+          <option value="en-US">English</option>
+          <option value="ru-RU">Русский</option>
+        </select>
+      </div>
+      
+      <div className="settings-section">
+        <h3>{t('settings.notification')}</h3>
         <div className="setting-item">
-          <label>消息提示音</label>
+          <label>{t('settings.messageSound')}</label>
           <select 
             value={settings.messageSound}
             onChange={(e) => setSettings({...settings, messageSound: e.target.value})}
           >
-            <option value="default">默认</option>
-            <option value="ding">叮咚</option>
-            <option value="bell">铃声</option>
-            <option value="chime">钟声</option>
-            <option value="custom">自定义铃声</option>
+            <option value="default">{t('settings.soundDefault')}</option>
+            <option value="ding">{t('settings.soundDing')}</option>
+            <option value="bell">{t('settings.soundBell')}</option>
+            <option value="chime">{t('settings.soundChime')}</option>
+            <option value="custom">{t('settings.soundCustom')}</option>
           </select>
         </div>
         <div className="setting-item">
-          <label>音量: {settings.soundVolume}%</label>
+          <label>{t('settings.soundVolume')}: {settings.soundVolume}%</label>
           <input 
             type="range" 
             min="0" 
@@ -99,7 +122,7 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
         </div>
         {settings.messageSound === 'custom' && (
           <div className="setting-item">
-            <label>选择本地铃声(.wav/.mp3)</label>
+            <label>{t('settings.selectLocalSound')}</label>
             <input
               type="file"
               accept=".wav,.mp3"
@@ -171,26 +194,26 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
       </div>
       
       <div className="settings-section">
-        <h3>侧边栏样式</h3>
+        <h3>{t('settings.sidebarStyle')}</h3>
         <select 
           value={settings.sidebarStyle} 
           onChange={(e) => handleSettingChange('sidebarStyle', e.target.value)}
         >
-          <option value="default">默认</option>
-          <option value="compact">紧凑</option>
-          <option value="qq9">QQ9风格</option>
+          <option value="default">{t('settings.default')}</option>
+          <option value="compact">{t('settings.compact')}</option>
+          <option value="qq9">{t('settings.qq9Style')}</option>
         </select>
       </div>
       
       <div className="settings-section">
-        <h3>聊天列表</h3>
+        <h3>{t('settings.chatList')}</h3>
         <label>
           <input 
             type="checkbox" 
             checked={settings.chatListStarred}
             onChange={(e) => handleSettingChange('chatListStarred', e.target.checked)}
           />
-          显示星标联系人
+          {t('settings.showStarredContacts')}
         </label>
         <label>
           <input 
@@ -198,25 +221,25 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
             checked={settings.chatListPinned}
             onChange={(e) => handleSettingChange('chatListPinned', e.target.checked)}
           />
-          显示置顶聊天
+          {t('settings.showPinnedChats')}
         </label>
       </div>
       
       <div className="settings-section">
-        <h3>主题</h3>
+        <h3>{t('settings.theme')}</h3>
         <select 
           value={settings.theme} 
           onChange={(e) => handleSettingChange('theme', e.target.value)}
         >
-          <option value="light">浅色</option>
-          <option value="dark">深色</option>
+          <option value="light">{t('settings.light')}</option>
+          <option value="dark">{t('settings.dark')}</option>
         </select>
       </div>
       
       <div className="settings-section">
-        <h3>联系人铃声方案</h3>
+        <h3>{t('settings.soundScheme')}</h3>
         <div className="setting-item">
-          <label>星标联系人铃声</label>
+          <label>{t('settings.starredContactSound')}</label>
           <select 
             value={settings.soundSchemes.starred}
             onChange={(e) => handleSettingChange('soundSchemes', {
@@ -224,15 +247,15 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
               starred: e.target.value
             })}
           >
-            <option value="default">默认</option>
-            <option value="ding">叮咚</option>
-            <option value="bell">铃声</option>
-            <option value="chime">钟声</option>
-            <option value="custom">自定义铃声</option>
+            <option value="default">{t('settings.soundDefault')}</option>
+            <option value="ding">{t('settings.soundDing')}</option>
+            <option value="bell">{t('settings.soundBell')}</option>
+            <option value="chime">{t('settings.soundChime')}</option>
+            <option value="custom">{t('settings.soundCustom')}</option>
           </select>
         </div>
         <div className="setting-item">
-          <label>普通联系人铃声</label>
+          <label>{t('settings.normalContactSound')}</label>
           <select 
             value={settings.soundSchemes.normal}
             onChange={(e) => handleSettingChange('soundSchemes', {
@@ -240,17 +263,17 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
               normal: e.target.value
             })}
           >
-            <option value="default">默认</option>
-            <option value="ding">叮咚</option>
-            <option value="bell">铃声</option>
-            <option value="chime">钟声</option>
-            <option value="custom">自定义铃声</option>
+            <option value="default">{t('settings.soundDefault')}</option>
+            <option value="ding">{t('settings.soundDing')}</option>
+            <option value="bell">{t('settings.soundBell')}</option>
+            <option value="chime">{t('settings.soundChime')}</option>
+            <option value="custom">{t('settings.soundCustom')}</option>
           </select>
         </div>
       </div>
       
       <div className="settings-actions">
-        <button className="logout-btn" onClick={handleLogout}>登出</button>
+        <button className="logout-btn" onClick={handleLogout}>{t('settings.logout')}</button>
       </div>
     </div>
   );
