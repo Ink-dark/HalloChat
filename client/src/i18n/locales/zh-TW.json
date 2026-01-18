@@ -27,7 +27,10 @@
     "passwordNotMatch": "兩次輸入的密碼不一致",
     "usernameFormat": "用戶名只能包含中文、字母、數字、下劃線，長度3-20位",
     "passwordFormat": "密碼必須包含大寫字母、小寫字母、數字、特殊符號中的至少三種，長度為6-20個字符",
-    "errorTitle": "錯誤提示"
+    "errorTitle": "錯誤提示",
+    "adminMode": "管理員模式",
+    "adminModeSuccess": "管理員模式登錄成功",
+    "adminCodeError": "管理員代碼錯誤"
   },
   "settings": {
     "title": "設置",

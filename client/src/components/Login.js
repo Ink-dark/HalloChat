@@ -35,6 +35,9 @@ const Login = ({ onLoginSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
+  
+  // 管理员模式状态
+  const [adminMode, setAdminMode] = useState(false);
 
   useEffect(() => {
     // 从localStorage加载上次使用的服务器信息
@@ -66,6 +69,32 @@ const Login = ({ onLoginSuccess }) => {
     
     try {
       const { username, password } = values;
+
+      // 管理员模式登录
+      if (adminMode) {
+        if (password === 'hallochat123') {
+          // 创建一个模拟的管理员用户
+          const adminUser = {
+            id: 'admin_' + Date.now(),
+            username: username || 'Admin',
+            email: 'admin@hallochat.local',
+            token: 'admin_dev_token_' + Date.now(),
+            isAdmin: true
+          };
+          
+          // 存储管理员token和用户信息
+          localStorage.setItem('halloChat_token', adminUser.token);
+          localStorage.setItem('halloChat_user', JSON.stringify(adminUser));
+          
+          message.success('🔧 ' + t('login.adminModeSuccess'));
+          
+          // 直接进入聊天页面
+          onLoginSuccess(adminUser);
+          return;
+        } else {
+          throw new Error(t('login.adminCodeError'));
+        }
+      }
 
       // 检查是否已选择服务器
       if (!selectedServer) {
@@ -172,17 +201,6 @@ const Login = ({ onLoginSuccess }) => {
   // 处理语言切换
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language);
-  };
-
-  // 获取语言显示名称
-  const getLanguageLabel = (lang) => {
-    const labels = {
-      'zh-CN': '简体中文',
-      'zh-TW': '繁體中文',
-      'en-US': 'English',
-      'ru-RU': 'Русский'
-    };
-    return labels[lang] || lang;
   };
 
   return (
@@ -374,9 +392,18 @@ const Login = ({ onLoginSuccess }) => {
               />
             </Form.Item>
             <Form.Item>
-              <Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}>
-                {t('login.rememberMe')}
-              </Checkbox>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}>
+                  {t('login.rememberMe')}
+                </Checkbox>
+                <Checkbox 
+                  checked={adminMode} 
+                  onChange={(e) => setAdminMode(e.target.checked)}
+                  style={{ color: '#667eea' }}
+                >
+                  🔧 {t('login.adminMode')}
+                </Checkbox>
+              </div>
             </Form.Item>
             <Form.Item>
               <Button 
