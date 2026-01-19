@@ -37,6 +37,16 @@ const userSchema = new Schema({
     default: () => uuidv1()
   },
   
+  // 用户唯一标识符（以服务器为单位，用于识别和验证）
+  uid: {
+    type: String,
+    required: true,
+    unique: true,
+    uppercase: true,
+    trim: true,
+    index: true
+  },
+  
   random_id: {
     type: String,
     required: true,
@@ -132,6 +142,45 @@ userSchema.index({ email: 1 });
 userSchema.index({ status: 1 });
 userSchema.index({ lastLogin: 1 });
 userSchema.index({ random_id: 1 });
+userSchema.index({ uid: 1 }, { unique: true });
+
+// UID 生成器（以服务器为单位）
+function generateUID() {
+  const timestamp = Date.now().toString(36).toUpperCase(); // 时间戳
+  const random = Math.random().toString(36).substr(2, 6).toUpperCase(); // 随机字符
+  return `${timestamp}${random}`;
+}
+
+// 静态方法：生成唯一 UID
+userSchema.statics.generateUniqueUID = async function() {
+  let uid;
+  let exists = true;
+  let attempts = 0;
+  const maxAttempts = 10;
+  
+  while (exists && attempts < maxAttempts) {
+    uid = generateUID();
+    exists = await this.findOne({ uid });
+    attempts++;
+  }
+  
+  if (exists) {
+    throw new Error('无法生成唯一 UID，请稍后重试');
+  }
+  
+  return uid;
+};
+
+// 静态方法：检查 UID 是否存在
+userSchema.statics.isUIDExists = async function(uid) {
+  const user = await this.findOne({ uid });
+  return !!user;
+};
+
+// 静态方法：通过 UID 查找用户
+userSchema.statics.findByUID = async function(uid) {
+  return await this.findOne({ uid }).select('-password');
+};
 
 // 密码加密中间件
 userSchema.pre('save', async function(next) {
@@ -161,6 +210,7 @@ userSchema.methods.getPublicProfile = function() {
     id: this._id,
     username: this.username,
     email: this.email,
+    uid: this.uid,
     avatar: this.avatar,
     status: this.status,
     role: this.role,
@@ -219,15 +269,21 @@ userSchema.statics.registerUser = async function(userData) {
     throw error;
   }
   
+  // 生成唯一 UID
+  const uid = await this.generateUniqueUID();
+  
   // 创建用户 - 密码会通过pre('save')中间件自动哈希
   const user = new this({
     username,
     email,
-    password // 明文密码，由pre('save')中间件处理哈希
+    password, // 明文密码，由pre('save')中间件处理哈希
+    uid
   });
   
   // 保存用户
   await user.save();
+  
+  console.log(`[用户注册] 成功创建用户: ${username}, UID: ${uid}`);
   
   // 返回用户的公开信息
   return user.getPublicProfile();
@@ -253,10 +309,14 @@ userSchema.statics.getFriends = async function(userId) {
 };
 
 // 用户登录验证
-async function loginUser(usernameOrEmail, plainPassword) {
-  // 支持通过用户名或邮箱登录
+async function loginUser(usernameOrEmailOrUID, plainPassword) {
+  // 支持通过用户名、邮箱或 UID 登录
   const user = await User.findOne({
-    $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
+    $or: [
+      { username: usernameOrEmailOrUID }, 
+      { email: usernameOrEmailOrUID },
+      { uid: usernameOrEmailOrUID.toUpperCase() }
+    ]
   });
   if (!user) throw new Error('用户不存在');
 
@@ -267,10 +327,13 @@ async function loginUser(usernameOrEmail, plainPassword) {
   user.lastLogin = new Date();
   await user.save();
 
+  console.log(`[用户登录] ${user.username} (UID: ${user.uid}) 登录成功`);
+
   return {
     id: user._id,
     username: user.username,
     email: user.email,
+    uid: user.uid,
     userUuid: user.user_uuid,
     randomId: user.random_id,
     avatar: user.avatar,

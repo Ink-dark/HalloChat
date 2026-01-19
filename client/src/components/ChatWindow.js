@@ -1,4 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { 
+  PhoneOutlined, 
+  VideoCameraOutlined, 
+  AppstoreOutlined,
+  PaperClipOutlined,
+  SmileOutlined,
+  SendOutlined
+} from '@ant-design/icons';
 import Message from '../models/message';
 import chatService from '../services/chatService';
 import './ChatWindow.css';
@@ -13,6 +21,15 @@ function ChatWindow({ currentUser, contact }) {
     const [isGroupChat, setIsGroupChat] = useState(false);
 
     const messageMenuRef = useRef(null);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     // 初始化聊天类型（单聊或群聊）
     useEffect(() => {
@@ -52,126 +69,35 @@ function ChatWindow({ currentUser, contact }) {
 
         // 添加消息处理器
         chatService.addMessageHandler((message) => {
-            // 确保消息属于当前聊天
             const isMessageForCurrentChat = 
                 (!isGroupChat && (message.senderId === contact.id || message.receiverId === contact.id)) ||
                 (isGroupChat && message.groupId === contact.id);
 
             if (isMessageForCurrentChat) {
                 setMessages(prev => [...prev, message]);
-
-                // 自动标记接收到的消息为已读
                 if (message.senderId !== currentUser.id) {
                     chatService.markAsRead(message.id);
                 }
             }
         });
 
-        // 添加已读状态处理器
-        chatService.addReadHandler((messageId, receiverId) => {
-            setMessages(prev => prev.map(msg => msg.id === messageId ? {
-                ...msg,
-                isRead: true,
-                receiverId,
-                syncStatus: 'synced'
-            } : msg
-            ));
-        });
-
-        // 添加同步状态处理器
-        chatService.addSyncHandler((messageId, status) => {
-            setMessages(prev => prev.map(msg => msg.id === messageId ? { ...msg, syncStatus: status } : msg
-            ));
-        });
-
-        // 添加输入状态处理器
-        chatService.addTypingHandler((userId, typingStatus) => {
-            if (!isGroupChat && userId === contact.id) {
-                setIsTyping(typingStatus);
-            }
-        });
-
-        // 添加撤回消息处理器
-        chatService.addRecallHandler((messageId) => {
-            setMessages(prev => prev.map(msg => {
-                if (msg.id === messageId) {
-                    const recalledMessage = new Message({
-                        ...msg,
-                        isRecalled: true,
-                        content: '[消息已撤回]',
-                        originalContent: msg.content,
-                        canBeEdited: (new Date().getTime() - msg.timestamp) < 120000
-                    });
-                    recalledMessage.recall();
-                    return recalledMessage;
-                }
-                return msg;
-            }));
-        });
-
-        // 添加编辑消息处理器
-        chatService.addEditHandler((messageId, newContent) => {
-            setMessages(prev => prev.map(msg => 
-                msg.id === messageId ? {
-                    ...msg,
-                    content: newContent,
-                    isEdited: true,
-                    timestamp: new Date().getTime()
-                } : msg
-            ));
-        });
-
-        // 监听消息状态更新
-        chatService.addStatusHandler((messageId, status) => {
-            setMessages(prev => prev.map(msg => 
-                msg.id === messageId ? { ...msg, status } : msg
-            ));
-        });
-
-        // 加载历史消息 - 将函数移到内部以避免依赖问题
+        // 加载历史消息
         const loadHistoryMessages = async () => {
             try {
-                // 使用模拟历史消息数据
                 const mockHistoryMessages = [
                     {
                         id: 'msg1',
                         senderId: contact.id,
                         receiverId: currentUser.id,
-                        content: '你好！最近怎么样？',
+                        content: 'Can you send me the files?',
                         type: 'text',
                         timestamp: Date.now() - 3600000,
                         isRead: true,
                         isDelivered: true,
                         status: 'delivered',
                         syncStatus: 'synced'
-                    },
-                    {
-                        id: 'msg2',
-                        senderId: currentUser.id,
-                        receiverId: contact.id,
-                        content: '我很好，谢谢！你呢？',
-                        type: 'text',
-                        timestamp: Date.now() - 3500000,
-                        isRead: true,
-                        isDelivered: true,
-                        status: 'delivered',
-                        syncStatus: 'synced'
-                    },
-                    {
-                        id: 'msg3',
-                        senderId: contact.id,
-                        receiverId: currentUser.id,
-                        content: '我也不错，最近在忙什么？',
-                        type: 'text',
-                        timestamp: Date.now() - 3400000,
-                        isRead: true,
-                        isDelivered: true,
-                        status: 'delivered',
-                        syncStatus: 'synced'
                     }
                 ];
-                
-                // 将模拟消息添加到状态中
                 setMessages(mockHistoryMessages);
             } catch (err) {
                 setError('加载历史消息失败: ' + err.message);
@@ -186,27 +112,21 @@ function ChatWindow({ currentUser, contact }) {
     }, [currentUser, contact, isGroupChat]);
 
     const handleSendMessage = () => {
-        if (!newMessage.trim()) {
-            setError('发送内容不能为空');
-            return;
-        }
+        if (!newMessage.trim()) return;
 
         try {
             setError(null);
             let message;
             
             if (isGroupChat) {
-                // 发送群组消息
                 message = chatService.sendGroupMessage(contact.id, newMessage);
             } else {
-                // 发送单聊消息
                 message = chatService.sendMessage(contact.id, newMessage);
             }
             
             setMessages(prev => [...prev, message]);
             setNewMessage('');
             
-            // 发送后停止输入状态
             if (isGroupChat) {
                 chatService.setGroupTypingStatus(contact.id, false);
             } else {
@@ -228,121 +148,61 @@ function ChatWindow({ currentUser, contact }) {
         }
     };
 
-    const handleRecallMessage = async (messageId) => {
-        try {
-            setError(null);
-            await chatService.recallMessage(messageId);
-        } catch (err) {
-            setError('撤回消息失败: ' + err.message);
-        }
-    };
-
-    const handleEditSubmit = async (messageId) => {
-        try {
-            setError(null);
-            if (!editContent.trim()) {
-                setError('编辑内容不能为空');
-                return;
-            }
-            
-            await chatService.editMessage(messageId, editContent);
-            setEditingMessageId(null);
-        } catch (err) {
-            setError('编辑消息失败: ' + err.message);
-        }
-    };
-
     return (
         <div className="chat-window">
-            {error && <div className="error-message">{error}</div>}
-            <div className="message-menu" ref={messageMenuRef}>
-                <button onClick={() => handleRecallMessage(messageMenuRef.current.getAttribute('data-message-id'))}>
-                    撤回消息
-                </button>
-                <button onClick={() => handleEditMessage(
-                    messageMenuRef.current.getAttribute('data-message-id'),
-                    messageMenuRef.current.getAttribute('data-message-content')
-                )}>
-                    编辑消息
-                </button>
-            </div>
-
             <div className="chat-header">
-                <h3>{contact.username}</h3>
-                <div className="status-indicator">
-                    {contact.onlineStatus ? '在线' : '离线'}
-                    {isTyping && <span className="typing-indicator">正在输入...</span>}
+                <div className="contact-info">
+                    <div className="chat-avatar">
+                        {contact.username?.charAt(0)}
+                    </div>
+                    <div className="chat-name-wrapper">
+                        <h3>{contact.username}</h3>
+                        <span className="chat-status">{contact.onlineStatus ? 'Online' : 'Offline'}</span>
+                    </div>
+                </div>
+                <div className="chat-header-actions">
+                    <button className="icon-btn"><PhoneOutlined /></button>
+                    <button className="icon-btn"><VideoCameraOutlined /></button>
+                    <button className="icon-btn"><AppstoreOutlined /></button>
                 </div>
             </div>
 
             <div className="messages-container">
-                {messages.length === 0 ? (
-                    <div className="no-messages">
-                        暂无消息，开始聊天吧！
-                    </div>
-                ) : (
-                    messages.map((message, index) => (
-                        <div
-                            key={message.id || index}
-                            className={`message ${message.senderId === currentUser.id ? 'sent' : 'received'}`}
-                            onContextMenu={(e) => {
-                                e.preventDefault();
-                                if (message.senderId === currentUser.id) {
-                                    showMessageMenu(e, message);
-                                }
-                            }}
-                        >
-                            {editingMessageId === message.id ? (
-                                <>
-                                    <input
-                                        type="text"
-                                        value={editContent}
-                                        onChange={(e) => setEditContent(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleEditSubmit(message.id)} />
-                                    <button onClick={() => handleEditSubmit(message.id)}>保存</button>
-                                    <button onClick={() => setEditingMessageId(null)}>取消</button>
-                                </>
-                            ) : (
-                                <p>
-                                    {message.isRecalled ? (
-                                        <>
-                                            [消息已撤回]
-                                            {message.canBeEdited && (
-                                                <button
-                                                    className="edit-recalled-btn"
-                                                    onClick={() => handleEditMessage(message.id, message.originalContent)}
-                                                >
-                                                    重新编辑
-                                                </button>
-                                            )}
-                                        </>
-                                    ) : message.content}
-                                </p>
-                            )}
+                {messages.map((message, index) => (
+                    <div
+                        key={message.id || index}
+                        className={`message-wrapper ${message.senderId === currentUser.id ? 'sent' : 'received'}`}
+                    >
+                        <div className="message-bubble">
+                            <p>{message.content}</p>
                             <span className="message-time">
-                                {new Date(message.timestamp).toLocaleTimeString()}
-                                {message.isEdited && ' (已编辑)'}
-                                {message.isRead && ' ✓✓'}
-                                {message.isDelivered && !message.isRead && ' ✓'}
-                                {message.status === 'sending' && ' ↻'}
-                                {message.status === 'error' && ' ⚠'}
+                                {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                         </div>
-                    ))
-                )}
+                    </div>
+                ))}
+                <div ref={messagesEndRef} />
             </div>
 
-            <div className="message-input">
-                <input
-                    type="text"
-                    value={newMessage}
-                    onChange={handleTyping}
-                    placeholder="输入消息..."
-                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()} />
-                <button onClick={handleSendMessage}>发送</button>
+            <div className="chat-footer">
+                <div className="input-actions">
+                    <button className="icon-btn"><PaperClipOutlined /></button>
+                    <button className="icon-btn"><SmileOutlined /></button>
+                </div>
+                <div className="message-input-wrapper">
+                    <input
+                        type="text"
+                        value={newMessage}
+                        onChange={handleTyping}
+                        placeholder="Type a message..."
+                        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()} />
+                </div>
+                <button className="send-btn" onClick={handleSendMessage}>
+                    <SendOutlined />
+                </button>
             </div>
         </div>
     );
-};
+}
 
 export default ChatWindow;

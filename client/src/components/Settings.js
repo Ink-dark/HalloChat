@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import './Settings.css';
 
 /**
  * 设置组件 - 管理应用程序的各种设置选项
  * 在多窗口架构中，设置的更改会通过props传递到主应用
  */
-const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
+const Settings = ({ currentUser, onLogout, onSettingsChange, onBack }) => {
   const { t, i18n } = useTranslation();
   const [settings, setSettings] = useState({
     sidebarStyle: 'default',
@@ -17,6 +18,11 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
     soundVolume: 50,
     customSound: null,
     customSounds: [],
+    // 通知设置
+    notificationSound: true,
+    notificationVibration: false,
+    notificationPreview: true,
+    notificationDesktop: true,
     soundSchemes: {
       starred: 'default',
       normal: 'default',
@@ -78,10 +84,31 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
   };
 
   return (
-    <div className="settings-container">
-      <h2>{t('settings.title')}</h2>
-      {currentUser && <p className="current-user-info">{t('settings.currentUser')}: {currentUser.username}</p>}
+    <div className="settings-page">
+      <div className="settings-header">
+        <button className="back-btn" onClick={onBack}>
+          <ArrowLeftOutlined />
+        </button>
+        <h2>{t('settings.title')}</h2>
+        <div className="header-spacer"></div>
+      </div>
       
+      <div className="settings-content">
+        {currentUser && (
+          <div className="user-info-card">
+            <div className="user-avatar-large">
+              {currentUser.username?.charAt(0) || '?'}
+            </div>
+            <h3>{currentUser.username}</h3>
+            <p className="user-email">{currentUser.email || 'user@example.com'}</p>
+            {currentUser.uid && (
+              <div className="user-uid">
+                <span className="uid-label">UID:</span>
+                <span className="uid-value">{currentUser.uid}</span>
+              </div>
+            )}
+          </div>
+        )}
       <div className="settings-section">
         <h3>{t('settings.languageSelection')}</h3>
         <select 
@@ -97,6 +124,43 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
       
       <div className="settings-section">
         <h3>{t('settings.notification')}</h3>
+        
+        <label>
+          <input 
+            type="checkbox" 
+            checked={settings.notificationSound}
+            onChange={(e) => handleSettingChange('notificationSound', e.target.checked)}
+          />
+          声音提醒
+        </label>
+        
+        <label>
+          <input 
+            type="checkbox" 
+            checked={settings.notificationVibration}
+            onChange={(e) => handleSettingChange('notificationVibration', e.target.checked)}
+          />
+          震动提醒
+        </label>
+        
+        <label>
+          <input 
+            type="checkbox" 
+            checked={settings.notificationPreview}
+            onChange={(e) => handleSettingChange('notificationPreview', e.target.checked)}
+          />
+          消息预览
+        </label>
+        
+        <label>
+          <input 
+            type="checkbox" 
+            checked={settings.notificationDesktop}
+            onChange={(e) => handleSettingChange('notificationDesktop', e.target.checked)}
+          />
+          桌面通知
+        </label>
+        
         <div className="setting-item">
           <label>{t('settings.messageSound')}</label>
           <select 
@@ -274,6 +338,7 @@ const Settings = ({ currentUser, onLogout, onSettingsChange }) => {
       
       <div className="settings-actions">
         <button className="logout-btn" onClick={handleLogout}>{t('settings.logout')}</button>
+      </div>
       </div>
     </div>
   );

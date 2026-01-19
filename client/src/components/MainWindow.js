@@ -5,7 +5,8 @@ import ChatWindow from './ChatWindow';
 import GroupChatWindow from './GroupChatWindow';
 import Settings from './Settings';
 import Logout from './Logout';
-import Notification from './Notification';
+import authService from '../services/authService';
+import contactService from '../services/contactService';
 import './MainWindow.css';
 
 const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
@@ -15,12 +16,24 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
+  const [serverConnected, setServerConnected] = useState(false);
   const [settings, setSettings] = useState({
     sidebarStyle: 'default',
     chatListStarred: false,
     chatListPinned: false,
     theme: 'light'
   });
+
+  // 模拟数据（用于演示模式）
+  const mockContacts = [
+    { id: 'user2', username: 'Sarah Wilson', lastMessage: 'See you tomorrow!', time: '2:30 PM', unread: 2, onlineStatus: true, type: 'user' },
+    { id: 'user3', username: 'Mike Johnson', lastMessage: 'Thanks for the update', time: '1:15 PM', onlineStatus: true, type: 'user' },
+    { id: 'user4', username: 'Emily Chen', lastMessage: "Let's schedule a meeting", time: '12:45 PM', unread: 1, onlineStatus: true, type: 'user' },
+    { id: 'user5', username: 'David Brown', lastMessage: 'Great job on the presentation!', time: '11:30 AM', onlineStatus: true, type: 'user' },
+    { id: 'user6', username: 'Lisa Anderson', lastMessage: 'Can you send me the files?', time: 'Yesterday', onlineStatus: false, type: 'user' },
+  ];
 
   // 组件挂载时检查用户是否已登录
   useEffect(() => {
@@ -31,6 +44,70 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
       }
     }
   }, [currentUser, onLogout]);
+
+  // 检测服务器连接状态并加载联系人
+  useEffect(() => {
+    const checkConnectionAndLoadData = async () => {
+      if (!currentUser) return;
+
+      try {
+        // 检查服务器连接
+        const connectionResult = await authService.checkServerConnection();
+        
+        if (connectionResult.success) {
+          console.log('[服务器连接] 成功，切换到生产模式');
+          setServerConnected(true);
+          
+          // 加载真实联系人数据
+          setIsLoadingContacts(true);
+          try {
+            const friends = await contactService.getFriends();
+            const groups = await contactService.getGroups();
+            
+            // 转换为统一格式
+            const formattedContacts = [
+              ...friends.map(friend => ({
+                id: friend._id || friend.id,
+                username: friend.username || friend.name,
+                lastMessage: friend.lastMessage || '',
+                time: friend.lastMessageTime ? new Date(friend.lastMessageTime).toLocaleTimeString() : '',
+                unread: friend.unreadCount || 0,
+                onlineStatus: friend.onlineStatus || false,
+                type: 'user'
+              })),
+              ...groups.map(group => ({
+                id: group._id || group.id,
+                username: group.name,
+                lastMessage: group.lastMessage || '',
+                time: group.lastMessageTime ? new Date(group.lastMessageTime).toLocaleTimeString() : '',
+                unread: group.unreadCount || 0,
+                onlineStatus: true,
+                type: 'group'
+              }))
+            ];
+            
+            setContacts(formattedContacts);
+            console.log(`[联系人加载] 成功加载 ${formattedContacts.length} 个联系人`);
+          } catch (error) {
+            console.error('[联系人加载] 失败，使用模拟数据:', error);
+            setContacts(mockContacts);
+          } finally {
+            setIsLoadingContacts(false);
+          }
+        } else {
+          console.log('[服务器连接] 失败，使用演示模式');
+          setServerConnected(false);
+          setContacts(mockContacts);
+        }
+      } catch (error) {
+        console.error('[模式检测] 错误，使用演示模式:', error);
+        setServerConnected(false);
+        setContacts(mockContacts);
+      }
+    };
+
+    checkConnectionAndLoadData();
+  }, [currentUser]);
 
   const handleLogout = () => {
     setShowLogout(true);
@@ -46,69 +123,65 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
 
   return (
     <div className={`main-window ${settings.theme}`}>
-      <Notification currentUser={currentUser} />
-      <div className="sidebar">
-        <button 
-          className="settings-btn"
-          onClick={() => setShowSettings(!showSettings)}
-        >
-          {t('main.settings')}
-        </button>
-        <ContactList 
+      {showSettings ? (
+        <Settings 
           currentUser={currentUser}
-          contacts={[
-            { id: 'user2', username: '好友1', onlineStatus: true, isStarred: false, isPinned: false, type: 'user' },
-            { id: 'user3', username: '好友2', onlineStatus: false, isStarred: true, isPinned: false, type: 'user' },
-            { id: 'user4', username: '好友3', onlineStatus: true, isStarred: false, isPinned: true, type: 'user' },
-          ]}
-          onSelectContact={(contact) => {
-            setSelectedContact(contact);
-            setSelectedGroup(null);
-            setActiveView('chat');
-          }}
-          onStartEncryptedChat={() => console.log('开始加密聊天')}
-          onCreateGroup={() => console.log('创建群组')}
-          onCreateChannel={() => console.log('创建频道')}
+          onLogout={handleConfirmLogout}
+          onSettingsChange={setSettings}
+          onBack={() => setShowSettings(false)}
         />
-      </div>
-      
-      <div className="content-area">
-        {!currentUser && (
-          <div className="login-required-view">
-            <h2>{t('main.pleaseLogin')}</h2>
-            <p>{t('main.redirectingToLogin')}</p>
+      ) : (
+        <>
+          <div className="sidebar">
+            <ContactList 
+              currentUser={currentUser}
+              contacts={contacts}
+              isLoading={isLoadingContacts}
+              serverConnected={serverConnected}
+              onSelectContact={(contact) => {
+                setSelectedContact(contact);
+                setSelectedGroup(null);
+                setActiveView('chat');
+              }}
+              onStartEncryptedChat={() => console.log('开始加密聊天')}
+              onCreateGroup={() => console.log('创建群组')}
+              onCreateChannel={() => console.log('创建频道')}
+              onShowSettings={() => setShowSettings(true)}
+              onLogout={handleLogout}
+            />
           </div>
-        )}
-        
-        {currentUser && activeView === 'contacts' && (
-          <div className="welcome-view">
-            <h2>{t('main.welcomeBack')}，{currentUser.username}</h2>
-            <p>{t('main.selectContactToChat')}</p>
+          
+          <div className="content-area">
+            {!currentUser && (
+              <div className="login-required-view">
+                <h2>{t('main.pleaseLogin')}</h2>
+                <p>{t('main.redirectingToLogin')}</p>
+              </div>
+            )}
+            
+            {currentUser && activeView === 'contacts' && (
+              <div className="welcome-view">
+                <h2>{t('main.welcomeBack')}，{currentUser.username}</h2>
+                <p>{t('main.selectContactToChat')}</p>
+              </div>
+            )}
+            
+            {currentUser && showLogout && (
+              <Logout 
+                onLogoutSuccess={handleConfirmLogout} 
+              />
+            )}
+            
+            {currentUser && activeView === 'chat' && selectedContact && (
+              <ChatWindow currentUser={currentUser} contact={selectedContact} />
+            )}
+            
+            {currentUser && activeView === 'group-chat' && selectedGroup && (
+              <GroupChatWindow currentUser={currentUser} group={selectedGroup} />
+            )}
           </div>
-        )}
-        
-        {currentUser && showLogout && (
-          <Logout 
-            onLogoutSuccess={handleConfirmLogout} 
-          />
-        )}
-        
-        {currentUser && activeView === 'chat' && selectedContact && (
-          <ChatWindow currentUser={currentUser} contact={selectedContact} />
-        )}
-        
-        {currentUser && activeView === 'group-chat' && selectedGroup && (
-          <GroupChatWindow currentUser={currentUser} group={selectedGroup} />
-        )}
-        
-        {currentUser && showSettings && (
-          <Settings 
-            currentUser={currentUser}
-            onLogout={handleLogout}
-            onSettingsChange={setSettings}
-          />
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };
