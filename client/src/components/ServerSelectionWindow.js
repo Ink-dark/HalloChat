@@ -445,7 +445,7 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
           padding: '16px 24px'
         }
       }}
-      destroyOnClose={false}
+      destroyOnHidden={false}
       maskClosable={true}
       keyboard={true}
     >
