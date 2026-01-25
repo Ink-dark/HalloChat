@@ -7,20 +7,22 @@ import {
   SmileOutlined,
   SendOutlined
 } from '@ant-design/icons';
-import Message from '../models/message';
+// import Message from '../models/message'; // 暂时未使用，保留以备后续消息模型扩展使用
 import chatService from '../services/chatService';
 import './ChatWindow.css';
 
 function ChatWindow({ currentUser, contact }) {
-    const [editContent, setEditContent] = useState('');
-    const [editingMessageId, setEditingMessageId] = useState(null);
+    // const [editContent, setEditContent] = useState(''); // 暂时未使用，保留以备后续消息编辑功能使用
+    // const [editingMessageId, setEditingMessageId] = useState(null); // 暂时未使用，保留以备后续消息编辑功能使用
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const [isTyping, setIsTyping] = useState(false);
-    const [error, setError] = useState(null);
+    // const [isTyping, setIsTyping] = useState(false); // 暂时未使用，保留以备后续 typing 状态显示使用
+    // const [error, setError] = useState(null); // 暂时未使用，保留以备后续错误处理使用
+    // 暂时添加 setError 函数以避免编译错误
+    const setError = (err) => console.error('Error:', err);
     const [isGroupChat, setIsGroupChat] = useState(false);
 
-    const messageMenuRef = useRef(null);
+    // const messageMenuRef = useRef(null); // 暂时未使用，保留以备后续消息菜单功能使用
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -36,30 +38,30 @@ function ChatWindow({ currentUser, contact }) {
         setIsGroupChat(contact && contact.type === 'group');
     }, [contact]);
 
-    const handleEditMessage = (messageId, content) => {
-        setEditingMessageId(messageId);
-        setEditContent(content);
-    };
+    // const handleEditMessage = (messageId, content) => {
+    //     setEditingMessageId(messageId);
+    //     setEditContent(content);
+    // }; // 暂时未使用，保留以备后续消息编辑功能使用
 
-    const showMessageMenu = (e, message) => {
-        const menu = messageMenuRef.current;
-        if (menu) {
-            menu.style.display = 'block';
-            menu.style.left = `${e.clientX}px`;
-            menu.style.top = `${e.clientY}px`;
+    // const showMessageMenu = (e, message) => {
+    //     const menu = messageMenuRef.current;
+    //     if (menu) {
+    //         menu.style.display = 'block';
+    //         menu.style.left = `${e.clientX}px`;
+    //         menu.style.top = `${e.clientY}px`;
 
-            // 设置当前选中的消息
-            menu.setAttribute('data-message-id', message.id);
-            menu.setAttribute('data-message-content', message.content);
+    //         // 设置当前选中的消息
+    //         menu.setAttribute('data-message-id', message.id);
+    //         menu.setAttribute('data-message-content', message.content);
 
-            // 点击其他地方关闭菜单
-            const closeMenu = () => {
-                menu.style.display = 'none';
-                document.removeEventListener('click', closeMenu);
-            };
-            document.addEventListener('click', closeMenu);
-        }
-    };
+    //         // 点击其他地方关闭菜单
+    //         const closeMenu = () => {
+    //             menu.style.display = 'none';
+    //             document.removeEventListener('click', closeMenu);
+    //         };
+    //         document.addEventListener('click', closeMenu);
+    //     }
+    // }; // 暂时未使用，保留以备后续消息菜单功能使用
 
     useEffect(() => {
         if (!currentUser || !contact) return;

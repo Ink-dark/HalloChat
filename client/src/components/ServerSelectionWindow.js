@@ -11,7 +11,8 @@ import authService from '../services/authService';
 
 const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
   const [servers, setServers] = useState([]);
-  const [foundServers, setFoundServers] = useState([]);
+  const [foundServers] = useState([]); // 暂时未使用，以备后续局域网服务器发现功能使用
+  // const setFoundServers = useState([])[1]; // 暂时未使用，保留以备后续局域网服务器发现功能使用
   const [selectedServer, setSelectedServer] = useState(null);
   const [isAddingServer, setIsAddingServer] = useState(false);
   const [isEditingServer, setIsEditingServer] = useState(false);
@@ -48,15 +49,15 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
   };
 
   // 发现局域网服务器
-  const discoverLocalServers = () => {
-    try {
-      // 这里可以添加mDNS发现逻辑
-      // 暂时使用空数组
-      setFoundServers([]);
-    } catch (err) {
-      console.log('发现局域网服务器失败:', err);
-    }
-  };
+  // const discoverLocalServers = () => {
+  //   try {
+  //     // 这里可以添加mDNS发现逻辑
+  //     // 暂时使用空数组
+  //     setFoundServers([]);
+  //   } catch (err) {
+  //     console.log('发现局域网服务器失败:', err);
+  //   }
+  // }; // 暂时未使用，保留以备后续局域网服务器发现功能使用
 
   // 测试服务器连接
   const testServerConnection = async (address, port) => {
@@ -98,8 +99,8 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
     setIsEditingServer(true);
   };
 
-  // 处理删除服务器
-  const handleDeleteServer = (server) => {
+  // 处理删除服务器 - 使用 useCallback 缓存以避免重复创建
+  const handleDeleteServer = useCallback((server) => {
     Modal.confirm({
       title: '确认删除',
       content: `确定要删除服务器 "${server.name}" 吗？`,
@@ -118,7 +119,7 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
         message.success('服务器删除成功');
       },
     });
-  };
+  }, [servers, selectedServer]);
 
   // 更新服务器信息
   const updateServer = async () => {
@@ -213,8 +214,8 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
   };
 
   // 处理服务器选择
-  // 处理服务器测试
-  const handleTestServer = async (server) => {
+  // 处理服务器测试 - 使用 useCallback 缓存以避免重复创建
+  const handleTestServer = useCallback(async (server) => {
     setServerStatuses(prev => ({
       ...prev,
       [server.id]: { status: 'testing' }
@@ -240,7 +241,7 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
         }
       }));
     }
-  };
+  }, []);
 
   // 处理服务器选择 - 使用 useCallback 优化
   const handleServerSelect = useCallback((server) => {
@@ -401,7 +402,7 @@ const ServerSelectionWindow = ({ visible, onClose, onServerSelected }) => {
         </div>
       ),
     },
-  ], [selectedServer, serverStatuses, handleServerSelect]);
+  ], [selectedServer, serverStatuses, handleServerSelect, handleDeleteServer, handleTestServer]);
 
   // 合并局域网服务器和已保存服务器 - 使用 useMemo 优化
   const combinedServers = useMemo(() => [

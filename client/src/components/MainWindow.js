@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ContactList from './ContactList';
 import ChatWindow from './ChatWindow';
@@ -11,9 +11,12 @@ import './MainWindow.css';
 
 const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
   const { t } = useTranslation();
-  const [activeView, setActiveView] = useState('contacts');
-  const [selectedContact, setSelectedContact] = useState(null);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [activeView] = useState('contacts'); // 保留用于视图切换功能
+  // const setActiveView = useState('contacts')[1]; // 暂时未使用，保留以备后续视图切换功能使用
+  const [selectedContact] = useState(null); // 保留用于联系人选择功能
+  // const setSelectedContact = useState(null)[1]; // 暂时未使用，保留以备后续联系人选择功能使用
+  const [selectedGroup] = useState(null); // 保留用于群组选择功能
+  // const setSelectedGroup = useState(null)[1]; // 暂时未使用，保留以备后续群组选择功能使用
   const [showSettings, setShowSettings] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const [contacts, setContacts] = useState([]);
@@ -26,14 +29,14 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
     theme: 'light'
   });
 
-  // 模拟数据（用于演示模式）
-  const mockContacts = [
+  // 模拟数据（用于演示模式）- 使用 useMemo 缓存以避免重复创建
+  const mockContacts = useMemo(() => [
     { id: 'user2', username: 'Sarah Wilson', lastMessage: 'See you tomorrow!', time: '2:30 PM', unread: 2, onlineStatus: true, type: 'user' },
     { id: 'user3', username: 'Mike Johnson', lastMessage: 'Thanks for the update', time: '1:15 PM', onlineStatus: true, type: 'user' },
     { id: 'user4', username: 'Emily Chen', lastMessage: "Let's schedule a meeting", time: '12:45 PM', unread: 1, onlineStatus: true, type: 'user' },
     { id: 'user5', username: 'David Brown', lastMessage: 'Great job on the presentation!', time: '11:30 AM', onlineStatus: true, type: 'user' },
     { id: 'user6', username: 'Lisa Anderson', lastMessage: 'Can you send me the files?', time: 'Yesterday', onlineStatus: false, type: 'user' },
-  ];
+  ], []);
 
   // 组件挂载时检查用户是否已登录
   useEffect(() => {
@@ -107,7 +110,7 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
     };
 
     checkConnectionAndLoadData();
-  }, [currentUser]);
+  }, [currentUser, mockContacts]); // 添加 mockContacts 作为依赖
 
   const handleLogout = () => {
     setShowLogout(true);
@@ -119,6 +122,31 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
       onLogout();
     }
     setShowLogout(false);
+  };
+
+  // 打开设置窗口
+  // const openSettingsWindow = () => {
+  //   if (window.Electron) {
+  //     window.Electron.ipcRenderer.send('open-settings-window');
+  //   }
+  // }; // 暂时未使用，保留以备后续设置窗口功能使用
+
+  // 打开服务器选择窗口
+  // const openServerSelectionWindow = () => {
+  //   if (window.Electron) {
+  //     window.Electron.ipcRenderer.send('open-server-selection-window');
+  //   }
+  // }; // 暂时未使用，保留以备后续服务器选择窗口功能使用
+
+  // 打开聊天窗口
+  const openChatWindow = (contact) => {
+    if (window.Electron) {
+      window.Electron.ipcRenderer.send('open-chat-window', {
+        chatId: contact.id,
+        chatType: contact.type,
+        chatName: contact.username
+      });
+    }
   };
 
   return (
@@ -139,9 +167,8 @@ const MainWindow = ({ currentUser, onLoginSuccess, onLogout }) => {
               isLoading={isLoadingContacts}
               serverConnected={serverConnected}
               onSelectContact={(contact) => {
-                setSelectedContact(contact);
-                setSelectedGroup(null);
-                setActiveView('chat');
+                // 打开新的聊天窗口
+                openChatWindow(contact);
               }}
               onStartEncryptedChat={() => console.log('开始加密聊天')}
               onCreateGroup={() => console.log('创建群组')}

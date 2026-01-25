@@ -27,6 +27,13 @@ const ContactList = ({
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+
+  // 打开服务器选择窗口
+  const openServerSelectionWindow = () => {
+    if (window.Electron) {
+      window.Electron.ipcRenderer.send('open-server-selection-window');
+    }
+  };
   
   // 点击外部关闭下拉菜单
   useEffect(() => {
@@ -85,6 +92,9 @@ const ContactList = ({
                 </div>
                 <div className="dropdown-item" onClick={() => handleMenuItemClick(() => alert('个人资料'))}>  
                   <UserOutlined /> <span>个人资料</span>
+                </div>
+                <div className="dropdown-item" onClick={() => handleMenuItemClick(openServerSelectionWindow)}>
+                  <SettingOutlined /> <span>服务器设置</span>
                 </div>
                 <div className="dropdown-divider"></div>
                 <div className="dropdown-item danger" onClick={() => handleMenuItemClick(onLogout)}>

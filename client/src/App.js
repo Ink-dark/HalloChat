@@ -3,10 +3,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import MainWindow from './components/MainWindow';
 import Login from './components/Login';
+import Settings from './components/Settings';
+import ServerSelectionWindow from './components/ServerSelectionWindow';
+import ChatWindow from './components/ChatWindow';
 import './App.css';
 import './index.css';
 import authService from './services/authService';
-import encryptedChatService from './services/encryptedChatService';
+// import encryptedChatService from './services/encryptedChatService'; // 暂时未使用，保留以备后续加密聊天功能使用
 import chatService from './services/chatService';
 
 
@@ -102,6 +105,18 @@ function App() {
       <div className="app-layout">
         {activeView === 'main' && isAuthenticated && currentUser ? (
           <MainWindow 
+            currentUser={currentUser} 
+            onLogout={handleLogout}
+          />
+        ) : activeView === 'settings' && isAuthenticated && currentUser ? (
+          <Settings 
+            currentUser={currentUser} 
+            onLogout={handleLogout}
+          />
+        ) : activeView === 'serverSelection' ? (
+          <ServerSelectionWindow />
+        ) : activeView === 'chat' && isAuthenticated && currentUser ? (
+          <ChatWindow 
             currentUser={currentUser} 
             onLogout={handleLogout}
           />
