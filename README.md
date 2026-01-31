@@ -7,7 +7,7 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 **本仓库近期因为一些原因重建，丢失了原有所有的commit记录，仅有Gitee仓库留有完整备份。现在已经重建成功，欢迎大神为我们的项目进行代码贡献。**
 
 **注意：** 
-1. 本项目为测试版本，存在已知问题和功能缺失，且不定期更新，如果有发现问题请及时提交issues联系我，感谢支持。
+1. 本项目尚处于测试版本，存在已知问题和功能缺失，且不定期更新，如果有发现问题请及时提交issues联系我，感谢支持。
 2. 本项目使用GitHub Actions 进行企业微信机器人通知（仅Push事件），用于通知项目维护者有新的代码提交。
    - 企业微信机器人Webhook URL：`https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ secrets.WECHAT_QIYE_WEBHOOK_URL }}`
    - 请将上述URL添加到您的项目的GitHub Actions Secrets 中，名称为 `WECHAT_QIYE_WEBHOOK_URL`。
@@ -24,7 +24,7 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 ## 项目开发者
 ### 墨染柒DarkSeven
 - 邮箱：moranqidarkseven@hallochat.cn
-- 个人博客：[墨染柒的个人博客](Ink-dark.github.io)
+- 个人博客：[墨染柒的个人博客-GitHub Pages（可能停止更新）](Ink-dark.github.io)
 
 ### SANYOU （LUCA.NEX)
 - 邮箱：you.san1@icloud.com
