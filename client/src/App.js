@@ -129,3 +129,24 @@ function App() {
 }
 
 export default App;
+// 请将此文件放到你的 electron 主进程入口（例如 electron/main.js 或 src/electron/main.js）
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,    // 强制启用
+      nodeIntegration: false,    // 禁止 node 集成
+      enableRemoteModule: false, // 禁用远程模块
+      webSecurity: true          // 启用 web 安全（CSP, 同源策略）
+    }
+  });
+
+  win.loadURL('http://localhost:3000'); // 或者 file://...
+}
+
+app.whenReady().then(createWindow);
