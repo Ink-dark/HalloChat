@@ -4,9 +4,11 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**本仓库近期因为一些原因重建，丢失了原有所有的commit记录，仅有Gitee仓库留有完整备份。现在已经重建成功，欢迎大神为我们的项目进行代码贡献。**
+## 新项目友链
+**我们正在开发以Dear Imgui + C++的HalloChat客户端，使用GNU-LGPL许可证！**
+新仓库链接：[HalloChat-DearImgui](https://github.com/Ink-dark/HalloChat-cpp-on-imgui)
 
-**注意：** 
+## 特别须知
 1. 本项目尚处于测试版本，存在已知问题和功能缺失，且不定期更新，如果有发现问题请及时提交issues联系我，感谢支持。
 2. 本项目使用GitHub Actions 进行企业微信机器人通知（仅Push事件），用于通知项目维护者有新的代码提交。
    - 企业微信机器人Webhook URL：`https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ secrets.WECHAT_QIYE_WEBHOOK_URL }}`
