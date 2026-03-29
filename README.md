@@ -2,7 +2,7 @@
 
 HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 
-ces 
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 新项目友链
