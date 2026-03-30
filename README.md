@@ -10,18 +10,16 @@ HalloChat 是一款实时聊天应用，客户端版本：v0.2.0
 新仓库链接：[HalloChat-DearImgui](https://github.com/Ink-dark/HalloChat-cpp-on-imgui)
 
 ## 特别须知
-1. 本项目尚处于测试版本，存在已知问题和功能缺失，且不定期更新，如果有发现问题请及时提交issues联系我，感谢支持。
-2. 本项目使用GitHub Actions 进行企业微信机器人通知（仅Push事件），用于通知项目维护者有新的代码提交。
-   - 企业微信机器人Webhook URL：`https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ secrets.WECHAT_QIYE_WEBHOOK_URL }}`
-   - 请将上述URL添加到您的项目的GitHub Actions Secrets 中，名称为 `WECHAT_QIYE_WEBHOOK_URL`。
+本项目尚处于测试版本，存在已知问题和功能缺失，且不定期更新，如果有发现问题请及时提交issues联系，感谢支持。
+
 
 ## 📄 许可证
 本项目采用 [MIT License](LICENSE) 开源许可证，允许自由使用、修改和分发。详细信息请查看 [LICENSE](LICENSE) 文件。
 我们鼓励但不强制要求您在使用本项目的部分或全部代码时保留原作者的版权声明和许可证信息。
 例如：
 ```
-// 本项目基于 HalloChat 客户端 v0.2.0 开发
-// 版权所有 © 2025 Ink-dark（墨染柒DarkSeven）
+// 本项目基于 HalloChat 客户端/服务端 v0.2.0 开发
+// 版权所有 © 2025 比特火炬-HalloChat团队
 // 遵循 MIT 开源许可证
 ```
 ## 项目开发者
